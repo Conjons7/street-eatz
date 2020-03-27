@@ -72,7 +72,7 @@ class Login extends Component {
             onPress={() => this.loginOwner(this.state.email, this.state.password)}>
             <Text style={styles.loginButtonText}> Login As Owner </Text>
           </TouchableOpacity>
-          <Text style={styles.registerButton} onPress={this.goToRegister}>Click Here To Register.</Text>
+          <Text style={styles.registerButton} onPress={this.goToRegister}>Click Here To Register!</Text>
         </ScrollView>
       </KeyboardAvoidingView>
     )
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   labelInput: {
     color: 'black',
-    fontSize: 12,
+    fontSize: 14,
     marginLeft: 30,
     zIndex: 1,
     justifyContent: 'space-evenly', 
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginLeft: 30,
     marginRight: 30,
-    fontSize: 15,
+    fontSize: 17,
   },
   loginButton: {
     backgroundColor: '#980000',
@@ -127,15 +127,17 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold',
+    fontSize:17,
   },
   registerButton: {
     color: 'blue',
     textAlign: 'center',
+    fontSize:18,
   },
   logo: {
-    width: 375,
-    height: 350,
-    marginBottom: 35,
+    width: 340,
+    height: 325,
+    marginBottom: 30,
     marginTop: 35,
     marginLeft: 17,
     resizeMode: 'contain',

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+ import React, { Component } from 'react'
 import { Router, Scene, Stack } from 'react-native-router-flux';
 import Register from './Register';
 import Login from './Login';

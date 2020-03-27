@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Dimensions, View, Text, YellowBox } from "react-native";
+import { StyleSheet, Dimensions, View, Text, YellowBox, Image } from "react-native";
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import io from 'socket.io-client';
@@ -82,8 +82,8 @@ export default class Map extends React.Component {
                     />
                     {this.state.sideMenuView ?
                     <View style={styles.menu}>
-                        <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} />
-                        <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} />
+                        <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                        <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
                     </View>
                     : <View></View>}
                     <View></View>
@@ -107,7 +107,9 @@ export default class Map extends React.Component {
                                             latitude: location.latitude,
                                             longitude: location.longitude
                                         }}
-                                    />
+                                    >
+                                        <Image style={styles.marker} source={require('../assets/food-truck.png')} />
+                                    </Marker>
                                 );
                             })
                             :
@@ -135,4 +137,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#980000',
         alignSelf: 'stretch',
       },
+    marker: {
+        width: 40,
+        height: 40,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        borderColor: 'blue',
+        borderWidth: 2,
+    }
 });

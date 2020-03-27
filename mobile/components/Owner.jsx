@@ -143,7 +143,7 @@ export default class Owner extends Component {
             name='menu'
             onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
           />}
-          centerComponent={{ style: { color: '#fff', fontSize: 20 }, text: this.state.name }}
+          centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: this.state.name }}
           rightComponent={<Icon
             name='home'
             onPress={() => this.goToOwnerMap(this.props.token, this.props.userId, this.props.businessIds)}
@@ -151,8 +151,8 @@ export default class Owner extends Component {
         />
         {this.state.sideMenuView ?
           <View style={styles.menu}>
-            <Button title="Settings" onPress={() => this.goToSettings(this.props.token, this.props.userId, this.props.businessIds)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} />
-            <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} />
+            <Button title="Settings" onPress={() => this.goToSettings(this.props.token, this.props.userId, this.props.businessIds)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+            <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
           </View>
           : <View></View>}
         <View>
@@ -203,13 +203,13 @@ const styles = StyleSheet.create({
   online: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 30,
     marginTop: 80
   },
   offline: {
     color: '#980000',
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 30,
     justifyContent: 'space-between',
     marginTop: 80
   },
@@ -229,6 +229,6 @@ const styles = StyleSheet.create({
   switchButtonText: {
     marginBottom: 5,
     fontWeight: 'bold',
-    fontSize: 20
+    fontSize: 25
   }
 })

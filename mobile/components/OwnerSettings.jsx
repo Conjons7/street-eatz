@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from "react-native";
 import { Header, Icon, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
+import { HOST } from 'react-native-dotenv';
+import axios from 'axios';
 
 export default class OwnerSettings extends React.Component {
   constructor(props) {
@@ -11,6 +13,12 @@ export default class OwnerSettings extends React.Component {
     }
   }
 
+  logOut() {
+    axios.post(`${HOST}/api/Owners/logout?access_token=${this.props.token}`)
+        .then(res => this.goToLogin())
+}
+
+  goToLogin = () => Actions.login();
   toggleSideMenu = sideMenuView =>  this.setState({ sideMenuView: !sideMenuView });
   goToOwner = (token, userId, businessIds) => Actions.owner({ token: token, userId: userId, businessIds: businessIds });
   goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({ token: token, userId: userId, businessIds: businessIds });
@@ -30,7 +38,7 @@ export default class OwnerSettings extends React.Component {
             name='menu'
             onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
           />}
-          centerComponent={{ style: { color: '#fff', fontSize: 20 }, text: this.state.name }}
+          centerComponent={{ style: { color: '#fff', fontSize: 22 }, text: this.state.name }}
           rightComponent={<Icon
             name='home'
             onPress={() => this.goToOwnerMap(this.props.token, this.props.userId, this.props.businessIds)}
@@ -38,9 +46,9 @@ export default class OwnerSettings extends React.Component {
         />
         {this.state.sideMenuView ?
           <View style={styles.menu}>
-            <Button title="Broadcast" onPress={() => this.goToOwner(this.props.token, this.props.userId, this.props.businessIds)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} />
-            <Button title="Settings" buttonStyle={{ backgroundColor: '#980000' }} />
-            <Button title="Logout" buttonStyle={{ backgroundColor: '#980000' }} />
+            <Button title="Broadcast" onPress={() => this.goToOwner(this.props.token, this.props.userId, this.props.businessIds)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+            <Button title="Settings" buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+            <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
           </View>
           : <View></View>}
         <View></View>

@@ -112,7 +112,7 @@ export default class Menu extends React.Component {
             name='menu'
             onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
           />}
-          centerComponent={{ style: { color: '#fff', fontSize: 20 }, text: this.state.businessName }}
+          centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: this.state.businessName }}
           rightComponent={<Icon
             name='home'
             onPress={() => this.goToMap(this.props.token)}
@@ -120,8 +120,8 @@ export default class Menu extends React.Component {
         />
         {this.state.sideMenuView ?
           <View style={styles.menu}>
-            <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} />
-            <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} />
+            <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+            <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}}/>
           </View>
           : <View></View>}
         <View style={styles.headerContainer} >
@@ -167,15 +167,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 22,
+    fontSize: 28,
+    paddingBottom: 5,
   },
   desc: {
-    fontSize: 14,
+    fontSize: 18,
     flexDirection: 'row',
   },
   price: {
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
     paddingTop: 5,
   },
   photo: {
@@ -203,12 +204,14 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   text: {
-    fontSize: 15,
+    fontSize: 20,
     paddingLeft: 10,
+    paddingBottom: 4,
+    textAlign: 'center',
     color: 'white'
   },
   menuLabel: {
-    fontSize: 22,
+    fontSize: 30,
     fontWeight: 'bold',
     width: '100%',
     backgroundColor: '#980000',
@@ -216,12 +219,12 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   firstMenuLabel: {
-    fontSize: 22,
+    fontSize: 30,
     fontWeight: 'bold',
     width: '100%',
     backgroundColor: '#980000',
     color: 'white',
     textAlign: 'center',
     marginBottom: -30
-  }
+  },
 })

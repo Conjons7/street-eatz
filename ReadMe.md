@@ -32,6 +32,7 @@ ReadMe
     "menu": [
           {
             "item": "",
+            "category": "",
             "image": "",
             "desc": "",
             "price": ""
@@ -45,3 +46,8 @@ ReadMe
 - Customers can be created through the register page.
 - In order to run the app properly, do an npm start in the Mobile and Server folder.
 - Plus make sure your MongoDB server is running.
+
+-------------------------------------------------------------------------------------
+NOTE ON MAP ICONS
+If this app is pushed to production, please make sure that a custom icon is used on maps. If the present icon is used ("food-truck.png"), attribute must be given to icon author (Good Ware). See https://www.flaticon.com/free-icon/food-truck_2676380?term=food%20truck&page=1&position=35 for instructions on giving attribute.
+--------------------------------------------------------------------------------------

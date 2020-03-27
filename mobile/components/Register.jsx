@@ -9,7 +9,7 @@ class Register extends Component {
     state = {
         email: '',
         password: '',
-        confirmPassword: '',
+        confirmedPassword: '',
         phoneNumber: '',
         name: '',
         value: ''
@@ -23,7 +23,7 @@ class Register extends Component {
     handleTextChange = newText => this.setState({ value: newText });
  
     registerUser = (name, phoneNumber, email, password) => {
-        if(this.state.password != this.state.confirmPassword) {
+        if(this.state.password != this.state.confirmedPassword) {
             alert('Your passwords do not match');
             return;
         } else {
@@ -45,7 +45,7 @@ class Register extends Component {
         }
     }
 
-    goToMap = token => Actions.map(token);
+    goToMap = token => Actions.map({token : token});
     goToLogin = () => Actions.login();
 
     render() {    
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     },
     labelInput: {
         color: 'black',
-        fontSize: 12,
+        fontSize: 14,
         marginLeft: 30,
         zIndex: 1,
         justifyContent: 'space-evenly',
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         marginLeft: 30,
         marginRight: 30,
         borderRadius: 0,
-        fontSize: 15,
+        fontSize: 17,
         },
     loginButton: {
         backgroundColor: '#980000',

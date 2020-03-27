@@ -35,7 +35,7 @@ export default class DescriptionMenu extends Component {
                         name='menu'
                         onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
                     />}
-                    centerComponent={{ style: { color: '#fff', fontSize: 20 }, text: this.props.item }}
+                    centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: this.props.item }}
                     rightComponent={<Icon
                         name='home'
                         onPress={() => this.goToMap(this.props.token)}
@@ -43,8 +43,8 @@ export default class DescriptionMenu extends Component {
                 />
                 {this.state.sideMenuView ?
                     <View style={styles.menu}>
-                        <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} />
-                        <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} />
+                        <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}}/>
+                        <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
                     </View>
                     : <View></View>}
                 <View>
@@ -56,7 +56,7 @@ export default class DescriptionMenu extends Component {
                     <View style={styles.evenSpaced}>
                         <Text style={styles.desc}>{this.props.desc}</Text>
                         <Text style={styles.price}>${this.props.price}</Text>
-                        <Button style={styles.backButton} title='Go Back to Menu' buttonStyle={{ backgroundColor: '#980000' }} onPress={() => this.goToMenu(this.props.token, this.props.businessId)}>Back to Menu</Button>
+                        <Button style={styles.backButton} title='Go Back to Menu' buttonStyle={{ backgroundColor: '#980000' }} onPress={() => this.goToMenu(this.props.token, this.props.businessId)} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}}>Back to Menu</Button>
                     </View>
                 </View>
         )
@@ -80,12 +80,12 @@ const styles = StyleSheet.create({
     desc: {
         textAlign: 'center',
         paddingLeft: 10,
-        fontSize: 25,
+        fontSize: 40,
         color: 'black',
     },
     price: {
         fontWeight: 'bold',
-        fontSize: 25,
+        fontSize: 30,
         paddingTop: 5,
         alignSelf: 'center',
     },
