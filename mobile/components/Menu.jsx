@@ -101,6 +101,8 @@ export default class Menu extends React.Component {
   goToMap = (token) => Actions.map({ token: token });
 
   render() {
+    let loginButton = <Button title="Login" onPress={() => this.goToLogin()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />;
+    let logoutButton = <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
     return (
       <View style={styles.container}>
         <Header
@@ -121,7 +123,9 @@ export default class Menu extends React.Component {
         {this.state.sideMenuView ?
           <View style={styles.menu}>
             <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
-            <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}}/>
+            {
+              this.props.token ? logoutButton : loginButton
+            }
           </View>
           : <View></View>}
         <View style={styles.headerContainer} >

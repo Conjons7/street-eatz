@@ -116,16 +116,17 @@ export default class Owner extends Component {
 
   handleToggleSwitch = newState =>this.setState(newState, this.socketSwitch);
   toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView });
-
+  
   logOut() {
     axios.post(`${HOST}/api/Owners/logout?access_token=${this.props.token}`)
-      .then(res => {
-        this.socketCheck;
-        this.socket.emit('disconnectUser', this.state.liveTruck);
-        this.goToLogin();
-      })
+    .then(res => {
+      this.socketCheck;
+      this.socket.emit('disconnectUser');
+      this.goToMap();
+    })
   }
-
+  
+  goToMap = () => Actions.map();
   goToLogin = () => Actions.login();
   goToSettings = (token, userId, businessIds) => Actions.ownerSettings({ token: token, userId: userId, businessIds: businessIds });
   goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({ token: token, userId: userId, businessIds: businessIds });

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
-import { Text, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { Text, TouchableOpacity, View, StyleSheet, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { Header, Icon } from 'react-native-elements';
 import { HOST } from 'react-native-dotenv';
 import AnimatedInput from 'react-native-animated-input-label';
 
@@ -19,7 +20,9 @@ class Login extends Component {
         email: email,
         password: pass
     })
-    .then(res => this.goToMap(res.data.id))
+    .then(res => {
+      this.goToMap(res.data.id)
+    })
     .catch(err => alert('Login attempt failed. Wrong username or password.'));
   }
 
@@ -39,10 +42,25 @@ class Login extends Component {
   goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({token: token, userId: userId, businessIds: businessIds});
   goToMap = token => Actions.map({token: token});
   goToRegister = () => Actions.register();
+  goToOwnerRegister = () => Actions.ownerRegister();
 
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View>
+          <Header
+              containerStyle={{
+                  backgroundColor: '#ffe599',
+                  justifyContent: 'space-around',
+                  borderBottomWidth: 0, 
+              }}
+              rightComponent={<Icon
+                name='close'
+                color= '#980000'
+                onPress={() => this.goToMap()}
+              />}
+          />
+        </View>
         <Image style={styles.logo} source={require('../assets/logo.png')} />
         <ScrollView scrollEnabled={true}>
           <AnimatedInput 
@@ -73,6 +91,7 @@ class Login extends Component {
             <Text style={styles.loginButtonText}> Login As Owner </Text>
           </TouchableOpacity>
           <Text style={styles.registerButton} onPress={this.goToRegister}>Click Here To Register!</Text>
+          <Text style={styles.registerButton} onPress = {this.goToOwnerRegister}>Click Here To Register As Owner</Text>
         </ScrollView>
       </KeyboardAvoidingView>
     )

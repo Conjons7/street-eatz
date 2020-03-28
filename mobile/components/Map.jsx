@@ -56,7 +56,7 @@ export default class Map extends React.Component {
         axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
         .then(res => {
           this.socket.emit('disconnectUser');
-          this.goToLogin();
+          this.goToMap();
         })
       }
     
@@ -64,9 +64,12 @@ export default class Map extends React.Component {
     goToSettings = token => Actions.customerSettings({token: token});
     toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView });
     goToMenu = (token, businessId) => Actions.menu({businessId: businessId, token: token});
+    goToMap = () => Actions.map();
         
     render() {
         let count = 0;
+        let loginButton = <Button title="Login" onPress={() => this.goToLogin()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />;
+        let logoutButton = <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
         return (
             <View style={styles.container}>
                 <Header
@@ -83,7 +86,9 @@ export default class Map extends React.Component {
                     {this.state.sideMenuView ?
                     <View style={styles.menu}>
                         <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
-                        <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                        {
+                            this.props.token ? logoutButton : loginButton
+                        }
                     </View>
                     : <View></View>}
                     <View></View>

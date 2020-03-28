@@ -57,11 +57,12 @@ export default class Map extends React.Component {
         axios.post(`${HOST}/api/Owners/logout?access_token=${this.props.token}`)
         .then(res => {
           this.socket.emit('disconnectUser');
-          this.goToLogin();
+          this.goToMap();
         })
       }
     
     goToLogin = () => Actions.login();
+    goToMap = () => Actions.map();
     goToSettings = (token, userId, businessIds) => Actions.ownerSettings({token: token, userId: userId, businessIds: businessIds});
     goToOwner = (token, userId, businessIds) => Actions.owner({token: token, userId: userId, businessIds: businessIds});
     toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView })

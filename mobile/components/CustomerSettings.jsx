@@ -15,15 +15,18 @@ export default class CustomerSettings extends React.Component {
 
   toggleSideMenu= sideMenuView => this.setState({ sideMenuView: !sideMenuView });
   goToMap = token => Actions.map({ token: token });
+  goToLogin = () => Actions.login();
 
   logOut() {
     axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
-        .then(res => this.goToLogin())
+        .then(res => this.goToMap())
 }
 
-  goToLogin = () => Actions.login();
+  
 
   render() {
+    let loginButton = <Button title="Login" onPress={() => this.goToLogin()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />;
+    let logoutButton = <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
     return (
       <View style={styles.container}>
         <Header
@@ -44,7 +47,9 @@ export default class CustomerSettings extends React.Component {
         {this.state.sideMenuView ?
           <View style={styles.menu}>
             <Button title="Settings" buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
-            <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}}/>
+            {
+              this.props.token ? logoutButton : loginButton
+            }
           </View>
           : <View></View>}
         <View></View>

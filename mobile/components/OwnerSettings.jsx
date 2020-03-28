@@ -15,14 +15,12 @@ export default class OwnerSettings extends React.Component {
 
   logOut() {
     axios.post(`${HOST}/api/Owners/logout?access_token=${this.props.token}`)
-        .then(res => this.goToLogin())
+        .then(res => this.goToMap())
 }
 
   goToLogin = () => Actions.login();
+  goToMap = () => Actions.map();
   toggleSideMenu = sideMenuView =>  this.setState({ sideMenuView: !sideMenuView });
-  goToOwner = (token, userId, businessIds) => Actions.owner({ token: token, userId: userId, businessIds: businessIds });
-  goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({ token: token, userId: userId, businessIds: businessIds });
-
   goToOwner = (token, userId, businessIds) => Actions.owner({ token: token, userId: userId, businessIds: businessIds });
   goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({ token: token, userId: userId, businessIds: businessIds });
 
