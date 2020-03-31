@@ -4,6 +4,7 @@ import axios from 'axios';
 import { HOST } from 'react-native-dotenv';
 import { Header, Icon, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
+import ShareFeature from './ShareFeature'
 
 export default class Menu extends React.Component {
   constructor(props) {
@@ -130,8 +131,11 @@ export default class Menu extends React.Component {
           : <View></View>}
         <View style={styles.headerContainer} >
           <Image style={styles.picture} source={{ uri: this.state.businessImage }} />
-          <Text style={styles.text}>{this.state.businessNumber}</Text>
-          <Text style={styles.text} onPress={() => Linking.openURL('http://' + this.state.businessUrl)}>{this.state.businessUrl}</Text>
+          <Text style={styles.textPhone}>{this.state.businessNumber}</Text> 
+          <Text style={styles.textWebpage} onPress={() => Linking.openURL('http://' + this.state.businessUrl)}>{this.state.businessUrl}</Text>
+          <ShareFeature
+            businessName={this.state.businessName}
+          />
         </View>
         <ScrollView scrollEnabled={true}>
           {this.state.items.length > 0 ?
@@ -193,7 +197,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'column',
     flex: 0,
-    height: 200,
+    height: 450,
     resizeMode: 'stretch',
     justifyContent: 'center',
     backgroundColor: '#980000',
@@ -207,12 +211,23 @@ const styles = StyleSheet.create({
     height: undefined,
     resizeMode: 'cover',
   },
-  text: {
+  textPhone: {
     fontSize: 20,
     paddingLeft: 10,
-    paddingBottom: 4,
+    paddingBottom: 0,
     textAlign: 'center',
-    color: 'white'
+    color: 'white',
+    paddingTop: 10,
+    marginBottom: 0
+  },
+  textWebpage: {
+    fontSize: 20,
+    paddingLeft: 10,
+    paddingBottom: 0,
+    textAlign: 'center',
+    color: 'white',
+    paddingTop: 0,
+    marginBottom: 0
   },
   menuLabel: {
     fontSize: 30,
