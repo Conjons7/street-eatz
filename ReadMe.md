@@ -29,6 +29,8 @@ ReadMe
     {
     "name": 
     "number": "",
+    "food style": "",
+    "price range":"",
     "menu": [
           {
             "item": "",
@@ -42,6 +44,9 @@ ReadMe
         "url": "",
         "ownerId": ""
     } 
+
+    *note the "food style" and "price range" section is used with the filter to find food trucks.
+    "Price Range" can range between "$" and "$$$".
   
 - Customers can be created through the register page.
 - In order to run the app properly, do an npm start in the Mobile and Server folder.

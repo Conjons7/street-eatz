@@ -10,13 +10,16 @@ import * as Location from 'expo-location';
 
 let location = [];
 let businessId = {};
-let selected = {}
+let selected = {};
+let businessName={};
+let priceRange={};
+let foodStyle={};
 
 TaskManager.defineTask('watch', ({ data: { locations = [] }, error }) => {
   if (error) console.error(error);
   let latitude = {latitude: locations[locations.length - 1].coords.latitude};
   let longitude = {longitude: locations[locations.length -1 ].coords.longitude};
-  location = {...latitude, ...longitude, ...businessId, ...selected};
+  location = {...latitude, ...longitude, ...businessId, ...selected, ...businessName, ...priceRange, ...foodStyle};
   const socket = io.connect(`${HOST}`, { transports: ['websocket'] });
   socket.emit(`updateLocation`, location);
 })
@@ -71,10 +74,13 @@ export default class Owner extends Component {
   }
 
   connectSocket() {
-    this.socket.emit('position', this.state.location, { businessIds: this.state.businesses[this.state.selected].id }, { selected: this.state.selected });
-    this.socket.on('position', () => this.setState({ loading: true, liveTruck: this.state.businesses[this.state.selected].id }));
+    this.socket.emit('position', this.state.location, { businessIds: this.state.businesses[this.state.selected].id }, { selected: this.state.selected }, {businessName:this.state.businesses[this.state.selected].name}, {priceRange: this.state.businesses[this.state.selected]['price range']}, {foodStyle: this.state.businesses[this.state.selected]['food style']});
+    this.socket.on('position', () => this.setState({ loading: true, liveTruck: this.state.businesses[this.state.selected].id}));
     businessId = {businessIds: this.state.businesses[this.state.selected].id};
     selected = {selected: this.state.selected};
+    businessName = {businessName:this.state.businesses[this.state.selected].name}
+    priceRange = {priceRange: this.state.businesses[this.state.selected]['price range']}
+    foodStyle = {foodStyle: this.state.businesses[this.state.selected]['food style']}
 
     startLocationUpdates = () => {
       Location.startLocationUpdatesAsync('watch', {

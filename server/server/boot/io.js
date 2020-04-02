@@ -7,8 +7,8 @@ module.exports = function(app) {
       app.io.on('connection', socket => {
           console.log('user is connected')
       
-          socket.on('position', (location, businessId, selected) => {
-            const ownerData = {...location, ...businessId, ...selected}
+          socket.on('position', (location, businessId, selected, businessName, priceRange, foodStyle) => {
+            const ownerData = {...location, ...businessId, ...selected, ...businessName, ...priceRange, ...foodStyle}
             locations.push(ownerData);
             socket.emit('position');
           })
@@ -42,7 +42,10 @@ module.exports = function(app) {
              return {
                  latitude: a.latitude,
                  longitude: a.longitude,
-                 businessId: a.businessIds
+                 businessId: a.businessIds,
+                 businessName: a.businessName,
+                 priceRange: a.priceRange,
+                 foodStyle: a.foodStyle
              }
           }));
           

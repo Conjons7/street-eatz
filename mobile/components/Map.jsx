@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
 import { Header, Icon, Button } from 'react-native-elements';
 import axios from 'axios';
+import FilterModal from './FilterModal';
 
 export default class Map extends React.Component {
     constructor(props) {
@@ -14,6 +15,9 @@ export default class Map extends React.Component {
         this.state = {
             location: null,
             sideMenuView: false,
+            distanceFilter: '',
+            priceFilter: '',
+            foodStyleFilter: ''
         };
         this.mounted = false;
         
@@ -65,11 +69,62 @@ export default class Map extends React.Component {
     toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView });
     goToMenu = (token, businessId) => Actions.menu({businessId: businessId, token: token});
     goToMap = () => Actions.map();
+    distance(lat1, lon1, lat2, lon2, unit) {
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        }
+        else {
+            var radlat1 = Math.PI * lat1/180;
+            var radlat2 = Math.PI * lat2/180;
+            var theta = lon1-lon2;
+            var radtheta = Math.PI * theta/180;
+            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            if (dist > 1) {
+                dist = 1;
+            }
+            dist = Math.acos(dist);
+            dist = dist * 180/Math.PI;
+            dist = dist * 60 * 1.1515;
+            if (unit=="K") { dist = dist * 1.609344 }
+            if (unit=="N") { dist = dist * 0.8684 }
+            return dist;
+        }
+    }
+
+    updateDistanceFilter = (filter) => this.setState({distanceFilter: filter});
+    updatePriceFilter = filter => this.setState({priceFilter: filter});
+    updateFoodStyleFilter = filter => this.setState({foodStyleFilter: filter})
+    
+    filterTrucks = (userLat, userLong, foodTrucks, distanceFilter, priceFilter, foodStyleFilter) => {
+        let distanceFilteredTrucks = [];
+        let priceFilteredTrucks = [];
+        let foodStyleFilteredTrucks = [];
+        
+        if (distanceFilter != '') {
+            distanceFilteredTrucks = foodTrucks.filter(truck => this.distance(userLat, userLong, truck.latitude, truck.longitude) < distanceFilter);
+        } else {
+            distanceFilteredTrucks = foodTrucks.filter(truck => this.distance(userLat, userLong, truck.latitude, truck.longitude) < 20);
+        };
+
+        if (priceFilter === '$') {
+            priceFilteredTrucks = distanceFilteredTrucks.filter(truck => truck.priceRange == priceFilter);
+        } else if (priceFilter === '$$') {
+            priceFilteredTrucks = distanceFilteredTrucks.filter(truck => truck.priceRange === '$$' || truck.priceRange === '$');
+        } else {
+            priceFilteredTrucks = distanceFilteredTrucks
+        };
+
+        if (foodStyleFilter != '') {
+            return foodStyleFilteredTrucks = priceFilteredTrucks.filter(truck => truck.foodStyle == foodStyleFilter)
+        } else {
+            return foodStyleFilteredTrucks = priceFilteredTrucks
+        }
+    }
         
     render() {
         let count = 0;
         let loginButton = <Button title="Login" onPress={() => this.goToLogin()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />;
-        let logoutButton = <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+        let logoutButton = <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />;
         return (
             <View style={styles.container}>
                 <Header
@@ -92,6 +147,14 @@ export default class Map extends React.Component {
                     </View>
                     : <View></View>}
                     <View></View>
+                    <FilterModal
+                    updateDistanceFilter={this.updateDistanceFilter}
+                    updatePriceFilter={this.updatePriceFilter}
+                    updateFoodStyleFilter={this.updateFoodStyleFilter}
+                    distanceFilter={this.state.distanceFilter}
+                    priceFilter={this.state.priceFilter}
+                    foodStyleFilter={this.state.foodStyleFilter}
+                    />
                     {this.state.location ?
                     <MapView style={styles.mapStyle}
                         initialRegion={{
@@ -100,11 +163,12 @@ export default class Map extends React.Component {
                             latitudeDelta: 0.0922,
                             longitudeDelta: 0.0421,
                         }}>
-                        {this.state.foodTruck ?
-                            this.state.foodTruck.map(location => {
+                        {this.state.foodTruck && this.state.location ?
+                            this.filterTrucks(this.state.location.latitude, this.state.location.longitude, this.state.foodTruck, this.state.distanceFilter, this.state.priceFilter, this.state.foodStyleFilter).map(location => {
                                 { count++ }
                                 return (
                                     <Marker
+                                        title={location.businessName}
                                         onPress={() => this.goToMenu(this.props.token, location.businessId)}
                                         businessId={location.businessId}
                                         key={count}
