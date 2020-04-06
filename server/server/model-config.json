@@ -47,5 +47,9 @@
   "Business": {
     "dataSource": "MongoDB",
     "public": true
+  },
+  "Reviews": {
+    "dataSource": "MongoDB",
+    "public": true
   }
 }

@@ -16,6 +16,7 @@ let priceRange={};
 let foodStyle={};
 
 TaskManager.defineTask('watch', ({ data: { locations = [] }, error }) => {
+  console.log('test');
   if (error) console.error(error);
   let latitude = {latitude: locations[locations.length - 1].coords.latitude};
   let longitude = {longitude: locations[locations.length -1 ].coords.longitude};

@@ -56,6 +56,7 @@ export default class Menu extends React.Component {
   displayMenu() {
     let count = 0;
     const menu = this.state.items;
+
     return menu.map((item, i) => {
       count++
       return (
@@ -100,6 +101,10 @@ export default class Menu extends React.Component {
   goToSettings = (token) => Actions.customerSettings({ token: token });
   toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView });
   goToMap = (token) => Actions.map({ token: token });
+  goToDisplayReview = (token) => {
+    axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
+      .then(response => Actions.displayReview({token: token, reviews:response.data, businessName: this.state.businessName}));
+  }
 
   render() {
     let loginButton = <Button title="Login" onPress={() => this.goToLogin()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />;
@@ -133,9 +138,8 @@ export default class Menu extends React.Component {
           <Image style={styles.picture} source={{ uri: this.state.businessImage }} />
           <Text style={styles.textPhone}>{this.state.businessNumber}</Text> 
           <Text style={styles.textWebpage} onPress={() => Linking.openURL('http://' + this.state.businessUrl)}>{this.state.businessUrl}</Text>
-          <ShareFeature
-            businessName={this.state.businessName}
-          />
+          <ShareFeature businessName={this.state.businessName} />
+          <Button title="Ratings + Reviews" onPress={() => this.goToDisplayReview(this.props.token)} buttonStyle={{backgroundColor: '#980000'}} />
         </View>
         <ScrollView scrollEnabled={true}>
           {this.state.items.length > 0 ?

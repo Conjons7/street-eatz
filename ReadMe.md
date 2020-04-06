@@ -11,6 +11,7 @@ ReadMe
   ![Screen Shot 2020-03-20 at 3 21 29 PM](https://user-images.githubusercontent.com/17171899/77211426-2fb75d80-6ac1-11ea-944c-4f7fb7a754e5.png)
 
   - EXAMPLE: HOST=’http://192.168.1.132:3000’
+  - If you still dont have access try replacing all instances of '${HOST}' with your ip address 'http://your.ip.address:3000'  
 - Install expo on your phone from the app store
 - Scan QR code after npm start in mobile folder to start app
 - Make sure your phone and computer are on the same Wifi.
@@ -47,6 +48,23 @@ ReadMe
 
     *note the "food style" and "price range" section is used with the filter to find food trucks.
     "Price Range" can range between "$" and "$$$".
+  - Adding Reviews:
+    - Reviews should be added with the following format:
+    {
+      "text": "string",
+      "response text": "string",
+      "timeStamp": "2020-04-03T22:19:40.664Z",
+      "username": "string",
+      "rating": 0,
+      "isHidden": false,
+      "businessId": "string",
+      "publisherId": "string"
+    }
+  "text" is used to store the review text.
+  "response text" is used to store a response from a truck owner.
+  "timeStamp" should be populated with an ISO time format.
+  "businessId" should store the buisnessId for the specific truck that is being reviewed.
+  "publisherId" should store the customer Id that is leaving the review.
   
 - Customers can be created through the register page.
 - In order to run the app properly, do an npm start in the Mobile and Server folder.

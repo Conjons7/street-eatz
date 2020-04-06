@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
         color:'#980000'
     },
     distanceText:{
-        marginTop:-100,
+        marginTop: -100,
         fontSize:25,
         fontWeight:'bold',
         color:'#980000'
     },
     foodText:{
-        marginTop:-200,
+        marginTop: -175,
         fontSize:25,
         fontWeight:'bold',
         color:'#980000',
