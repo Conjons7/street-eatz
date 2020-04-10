@@ -67,7 +67,7 @@ export default class Map extends React.Component {
     goToLogin = () => Actions.login();
     goToSettings = token => Actions.customerSettings({token: token});
     toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView });
-    goToMenu = (token, businessId) => Actions.menu({businessId: businessId, token: token});
+    goToMenu = (token, businessId, username) => Actions.menu({token: token, businessId: businessId, username: username});
     goToMap = () => Actions.map();
     distance(lat1, lon1, lat2, lon2, unit) {
         if ((lat1 == lat2) && (lon1 == lon2)) {
@@ -169,7 +169,7 @@ export default class Map extends React.Component {
                                 return (
                                     <Marker
                                         title={location.businessName}
-                                        onPress={() => this.goToMenu(this.props.token, location.businessId)}
+                                        onPress={() => this.goToMenu(this.props.token, location.businessId, this.props.username)}
                                         businessId={location.businessId}
                                         key={count}
                                         coordinate={{

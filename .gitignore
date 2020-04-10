@@ -33,3 +33,4 @@ web-report/
 coverage
 mobile/.env
 server/.env
+.env

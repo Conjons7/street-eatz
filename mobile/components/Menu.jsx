@@ -1,7 +1,7 @@
 import React from 'react';
+import { HOST } from 'react-native-dotenv';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import axios from 'axios';
-import { HOST } from 'react-native-dotenv';
 import { Header, Icon, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import ShareFeature from './ShareFeature'
@@ -103,7 +103,8 @@ export default class Menu extends React.Component {
   goToMap = (token) => Actions.map({ token: token });
   goToDisplayReview = (token) => {
     axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
-      .then(response => Actions.displayReview({token: token, reviews:response.data, businessName: this.state.businessName}));
+      .then(response => {
+        Actions.displayReview({token: token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, username: this.props.username})});
   }
 
   render() {

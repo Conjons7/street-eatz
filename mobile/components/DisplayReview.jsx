@@ -4,6 +4,7 @@ import { Header, Icon, Rating, Button, AirbnbRating } from 'react-native-element
 import { Actions } from 'react-native-router-flux';
 import ReviewModal from './ReviewModal';
 import LoginRequiredModal from './LoginRequiredModal'
+import axios from 'axios';
 
 export default class DisplayReview extends Component{
   constructor(props) {
@@ -106,7 +107,9 @@ export default class DisplayReview extends Component{
             <ReviewModal
             token = {this.props.token}
             loginRequiredModal = {() => this.showLoginRequiredModal()}
-            isVisible = {this.state.showLoginRequiredModal}
+            isVisible = { this.state.showLoginRequiredModal }
+            businessId = { this.props.businessId }
+            username = { this.props.username }
             />
             <LoginRequiredModal
             isVisible = {this.state.showLoginRequiredModal}

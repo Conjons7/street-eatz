@@ -21,7 +21,11 @@ class Login extends Component {
         password: pass
     })
     .then(res => {
-      this.goToMap(res.data.id)
+      axios.get(`${HOST}/api/Customers/${res.data.userId}`)
+      .then(response => {
+        console.log(response.data.name)
+        this.goToMap(res.data.id, res.data.userId, response.data.name)}) 
+      .catch(err => console.log(err))
     })
     .catch(err => alert('Login attempt failed. Wrong username or password.'));
   }
@@ -40,7 +44,7 @@ class Login extends Component {
   }
 
   goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({token: token, userId: userId, businessIds: businessIds});
-  goToMap = token => Actions.map({token: token});
+  goToMap = (token, userId, username) => Actions.map({token: token, userId: userId, username: username});
   goToRegister = () => Actions.register();
   goToOwnerRegister = () => Actions.ownerRegister();
 
@@ -61,7 +65,7 @@ class Login extends Component {
               />}
           />
         </View>
-        <Image style={styles.logo} source={require('../assets/logo.png')} />
+        <Image style={styles.logo} source={require('../assets/logo.png')}/>
         <ScrollView scrollEnabled={true}>
           <AnimatedInput 
             inputStyle={styles.input}
