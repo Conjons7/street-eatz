@@ -5,13 +5,11 @@ import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
 
-let menu = []
-
 export default class OwnerEditMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      
+      menu: []
     }
   }
 
@@ -19,7 +17,7 @@ export default class OwnerEditMenu extends React.Component {
       axios.get(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}`)
         .then(res => {
             menu = res.data.menu
-            console.log(menu)
+            this.setState({ menu: res.data.menu })
         })
         .catch(err => alert('Something went wrong.'))
   }
@@ -27,6 +25,19 @@ export default class OwnerEditMenu extends React.Component {
   goToEditItem = (item) => { console.log(`menu item ${item} selected`) }
 
   render() {
+      const menu = this.state.menu
+      console.log('menu: ', menu)
+      displayMenu = menu.map((item, i) => (
+        <ListItem
+            key={i}
+            onPress={() => this.goToEditItem(menu[i]) }
+            leftAvatar={{ source: { uri: item.image } }}
+            title={item.item}
+            subtitle={item.price}
+            bottomDivider
+            chevron
+        />
+      ))
       return (
         <View style={styles.container}>
             <Header
@@ -45,17 +56,7 @@ export default class OwnerEditMenu extends React.Component {
                 />}
             />
             <View styles={styles.menu}>
-                {menu.map((item, i) => (
-                    <ListItem
-                        key={i}
-                        onPress={ this.goToEditItem(menu[i]) }
-                        leftAvatar={{ source: { uri: item.image } }}
-                        title={item.item}
-                        subtitle={item.price}
-                        bottomDivider
-                        chevron
-                    />
-                ))}
+                {displayMenu ? displayMenu : null}
             </View>
         </View>
       )
