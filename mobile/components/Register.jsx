@@ -27,14 +27,14 @@ class Register extends Component {
             alert('Your passwords do not match');
             return;
         } else {
-        axios.post(`${HOST}/api/Customers`, {
+        axios.post(`http://192.168.1.65:3000/api/Customers`, {
             name: name,
             number: phoneNumber,
             email: email,
             password: password
         })
         .then((response) =>
-            axios.post(`${HOST}/api/Customers/login`, {
+            axios.post(`http://192.168.1.65:3000/api/Customers/login`, {
                 email: email,
                 password: password
             })

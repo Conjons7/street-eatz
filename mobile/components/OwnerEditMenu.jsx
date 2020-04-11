@@ -15,17 +15,18 @@ export default class OwnerEditMenu extends React.Component {
     }
   }
 
-  componentDidMount() {
-      console.log('componentDidMount runs')
+  componentWillMount() {
       axios.get(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}`)
         .then(res => {
             menu = res.data.menu
+            console.log(menu)
         })
         .catch(err => alert('Something went wrong.'))
   }
 
+  goToEditItem = (item) => { console.log(`menu item ${item} selected`) }
+
   render() {
-      console.log('this.props from OwnerEditMenu: ', this.props.token, this.props.userId, this.props.businessIds)
       return (
         <View style={styles.container}>
             <Header
@@ -47,10 +48,12 @@ export default class OwnerEditMenu extends React.Component {
                 {menu.map((item, i) => (
                     <ListItem
                         key={i}
+                        onPress={ this.goToEditItem(menu[i]) }
                         leftAvatar={{ source: { uri: item.image } }}
                         title={item.item}
                         subtitle={item.price}
                         bottomDivider
+                        chevron
                     />
                 ))}
             </View>

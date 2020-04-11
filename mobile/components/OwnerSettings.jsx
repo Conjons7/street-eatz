@@ -1,11 +1,11 @@
-import React from 'react';
-import { StyleSheet, View } from "react-native";
+import React, { Component } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Header, Icon, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
 
-export default class OwnerSettings extends React.Component {
+export default class OwnerSettings extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,9 +14,13 @@ export default class OwnerSettings extends React.Component {
   }
 
   logOut() {
-    axios.post(`${HOST}/api/Owners/logout?access_token=${this.props.token}`)
+    axios.post(`http://192.168.1.65:3000/api/Owners/logout?access_token=${this.props.token}`)
         .then(res => this.goToMap())
-}
+  }
+
+  handleEditMenuClick() {
+    console.log('handleEditMenuClick clicked!')
+  }
 
   goToLogin = () => Actions.login();
   goToMap = () => Actions.map();
@@ -36,7 +40,7 @@ export default class OwnerSettings extends React.Component {
             name='menu'
             onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
           />}
-          centerComponent={{ style: { color: '#fff', fontSize: 22 }, text: this.state.name }}
+          centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: "Settings" }}
           rightComponent={<Icon
             name='home'
             onPress={() => this.goToOwnerMap(this.props.token, this.props.userId, this.props.businessIds)}
@@ -50,6 +54,11 @@ export default class OwnerSettings extends React.Component {
           </View>
           : <View></View>}
         <View></View>
+        <TouchableOpacity
+          style={styles.editMenuButton}
+          onPress={() => Actions.ownerEditMenu({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}>
+          <Text style={styles.editMenuButtonText}> Edit Menu </Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -65,4 +74,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#980000',
     alignSelf: 'stretch',
   },
+  editMenuButton: {
+    backgroundColor: '#980000',
+    width: 300,
+    padding: 10,
+    marginTop: 15,
+    marginLeft: 100,
+    marginRight: 100,
+    marginBottom: 15,
+    height: 40,
+    borderRadius: 20,
+  },
+  editMenuButtonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize:17,
+  }
 });

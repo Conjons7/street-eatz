@@ -29,7 +29,7 @@ class OwnerRegister extends Component {
             alert('Your passwords do not match');
             return;
         } else {
-        axios.post(`${HOST}/api/Owners`, {
+        axios.post(`http://192.168.1.65:3000/api/Owners`, {
             name: name,
             business: [businessName],  
             number: phoneNumber,
@@ -37,13 +37,13 @@ class OwnerRegister extends Component {
             password: password
         })
         .then((response) =>
-            axios.post(`${HOST}/api/Owners/login`, {
+            axios.post(`http://192.168.1.65:3000/api/Owners/login`, {
                 email: email,
                 password: password
             })
             // .then(res => this.goToMap(res.data.id))
             .then(res => {
-                axios.get(`${HOST}/api/Owners/${res.data.userId}/businesses`)
+                axios.get(`http://192.168.1.65:3000/api/Owners/${res.data.userId}/businesses`)
                 .then(response => this.goToOwnerMap(res.data.id, res.data.userId, response.data.map(business => business.id)))
                 .catch(err => alert('You have no businesses associated with your account'));
             })

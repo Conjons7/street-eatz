@@ -7,11 +7,12 @@ import Map from './Map';
 import Owner from './Owner';
 import Menu from './Menu';
 import OwnerSettings from './OwnerSettings';
+import OwnerEditMenu from './OwnerEditMenu';
 import CustomerSettings from './CustomerSettings';
 import DescriptionMenu from './DescriptionMenu';
 import OwnerMap from './OwnerMap';
-import DisplayReview from './DisplayReview'
-import ReviewModal from './ReviewModal'
+import DisplayReview from './DisplayReview';
+import ReviewModal from './ReviewModal';
 
 export default class Routes extends Component {
     render(){
@@ -25,12 +26,12 @@ export default class Routes extends Component {
                 <Scene key= 'map' component = { Map } initial = {true} hideNavBar={true} />
                 <Scene key= 'menu' component = { Menu } hideNavBar={true} />
                 <Scene key= 'ownerSettings' component = { OwnerSettings } hideNavBar={true} />
+                <Scene key= 'ownerEditMenu' component = { OwnerEditMenu } hideNavBar={true} />
                 <Scene key= 'customerSettings' component = { CustomerSettings } hideNavBar={true} />
                 <Scene key= 'descriptionMenu' component = { DescriptionMenu } hideNavBar={true} />
                 <Scene key= 'ownerMap' component = { OwnerMap } hideNavBar={true} />
                 <Scene key= 'displayReview' component = { DisplayReview } hideNavBar={true} />
                 <Scene key= 'reviewModal' component = { ReviewModal } hideNavBar={true} />
-
             </Stack>
         </Router>
         );

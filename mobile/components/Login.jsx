@@ -16,7 +16,7 @@ class Login extends Component {
   handlePassword = text => this.setState({ password: text })
 
   login = (email, pass) => {
-    axios.post(`${HOST}/api/Customers/login`, {
+    axios.post(`http://192.168.1.65:3000/api/Customers/login`, {
         email: email,
         password: pass
     })
@@ -27,12 +27,12 @@ class Login extends Component {
   }
 
   loginOwner = (email, pass) => {
-    axios.post(`${HOST}/api/Owners/login`, {
+    axios.post(`http://192.168.1.65:3000/api/Owners/login`, {
         email: email,
         password: pass
     })
     .then(res => {
-        axios.get(`${HOST}/api/Owners/${res.data.userId}/businesses`)
+        axios.get(`http://192.168.1.65:3000/api/Owners/${res.data.userId}/businesses`)
         .then(response => this.goToOwnerMap(res.data.id, res.data.userId, response.data.map(business => business.id)))
         .catch(err => alert('You have no businesses associated with your account'));
     })
