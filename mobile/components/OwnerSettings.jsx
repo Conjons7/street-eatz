@@ -15,11 +15,10 @@ export default class OwnerSettings extends Component {
 
   logOut() {
     axios.post(`http://192.168.1.65:3000/api/Owners/logout?access_token=${this.props.token}`)
-        .then(res => this.goToMap())
-  }
-
-  handleEditMenuClick() {
-    console.log('handleEditMenuClick clicked!')
+        .then(res => {
+          this.goToMap()
+        })
+        .catch(err => alert('Something went wrong.'))
   }
 
   goToLogin = () => Actions.login();
@@ -29,6 +28,7 @@ export default class OwnerSettings extends Component {
   goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({ token: token, userId: userId, businessIds: businessIds });
 
   render() {
+    console.log(this.props.token)
     return (
       <View style={styles.container}>
         <Header
@@ -49,7 +49,6 @@ export default class OwnerSettings extends Component {
         {this.state.sideMenuView ?
           <View style={styles.menu}>
             <Button title="Broadcast" onPress={() => this.goToOwner(this.props.token, this.props.userId, this.props.businessIds)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
-            <Button title="Settings" buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
             <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
           </View>
           : <View></View>}

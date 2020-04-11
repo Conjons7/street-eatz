@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Header, Icon, Button, ListItem } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
@@ -9,11 +9,12 @@ export default class OwnerEditMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      menu: []
+      menu: [],
+      sideMenuView: false
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
       axios.get(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}`)
         .then(res => {
             menu = res.data.menu
@@ -22,15 +23,23 @@ export default class OwnerEditMenu extends React.Component {
         .catch(err => alert('Something went wrong.'))
   }
 
-  goToEditItem = (item) => { console.log(`menu item ${item} selected`) }
+  goToMap = () => Actions.map()
+  toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView })
+  goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({ token: token, userId: userId, businessIds: businessIds })
+  goToOwner = (token, userId, businessIds) => Actions.owner({ token: token, userId: userId, businessIds: businessIds })
+  goToSettings = (token, userId, businessIds) => Actions.ownerSettings({ token: token, userId: userId, businessIds: businessIds })
+  logOut = () => {
+    axios.post(`http://192.168.1.65:3000/api/Owners/logout?access_token=${this.props.token}`)
+        .then(res => this.goToMap())
+        .catch(err => alert('Something went wrong.'))
+  }
 
   render() {
       const menu = this.state.menu
-      console.log('menu: ', menu)
-      displayMenu = menu.map((item, i) => (
+      const displayMenu = menu.map((item, i) => (
         <ListItem
             key={i}
-            onPress={() => this.goToEditItem(menu[i]) }
+            onPress={() => Actions.ownerEditItem({ itemData: menu[i] })}
             leftAvatar={{ source: { uri: item.image } }}
             title={item.item}
             subtitle={item.price}
@@ -55,10 +64,27 @@ export default class OwnerEditMenu extends React.Component {
                     onPress={() => this.goToOwnerMap(this.props.token, this.props.userId, this.props.businessIds)}
                 />}
             />
-            <View styles={styles.menu}>
-                {displayMenu ? displayMenu : null}
+            {this.state.sideMenuView ?
+                <View style={styles.menu}>
+                    <Button title="Broadcast" onPress={() => this.goToOwner(this.props.token, this.props.userId, this.props.businessIds)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                    <Button title="Settings" onPress={() => this.goToSettings(this.props.token, this.props.userId, this.props.businessIds)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                    <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                </View>
+            : <View></View>}
+            <ListItem
+                onPress={() => Actions.ownerEditItem()}
+                leftIcon={<Icon raised name='add' type='material'/>}
+                title="Add A New Menu Item"
+                titleStyle={styles.listAddItem}
+                bottomDivider
+                chevron
+            />
+            {displayMenu ? 
+                <View styles={styles.menu}>
+                    {displayMenu}
+                </View>
+            : null}
             </View>
-        </View>
       )
   }
 }
@@ -72,21 +98,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#980000',
         alignSelf: 'stretch',
     },
-    editMenuButton: {
-        backgroundColor: '#980000',
-        width: 300,
-        padding: 10,
-        marginTop: 15,
-        marginLeft: 100,
-        marginRight: 100,
-        marginBottom: 15,
-        height: 40,
-        borderRadius: 20,
-    },
-    editMenuButtonText: {
-        color: 'white',
+    listAddItem: {
+        justifyContent: 'center',
+        color: 'gray',
         textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize:17,
     }
 });
