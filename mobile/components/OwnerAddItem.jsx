@@ -5,7 +5,7 @@ import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
 
-export default class OwnerEditItem extends React.Component {
+export default class OwnerAddItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,23 +19,6 @@ export default class OwnerEditItem extends React.Component {
     }
   }
 
-  componentDidMount() {
-        this.setState({
-            item: this.props.menu[this.props.i].item ? this.props.menu[this.props.i].item : '',
-            price: this.props.menu[this.props.i].price ? this.props.menu[0].price : '',
-            category: this.props.menu[this.props.i].category ? this.props.menu[0].category : '',
-            image: this.props.menu[this.props.i].image ? this.props.menu[0].image : '',
-            desc: this.props.menu[this.props.i].desc ? this.props.menu[0].desc : '',
-            popular: this.props.menu[this.props.i].popular ? this.props.menu[0].popular : false
-        })
-    //   axios.get(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}`)
-    //     .then(res => {
-    //         menu = res.data.menu
-    //         this.setState({ menu: res.data.menu })
-    //     })
-    //     .catch(err => alert('Something went wrong.'))
-  }
-
   submit = () => {
       const saveItem = {
         item: this.state.item,
@@ -46,20 +29,33 @@ export default class OwnerEditItem extends React.Component {
         popular: this.state.popular
       }
       const menu = this.props.menu
-      const updateMenu = menu.map((item, i) => {
-          if(i == this.props.i) {
-              return saveItem
-          } else { return item }
-      })
+      console.log('menu: ', menu)
+    //   const updateMenu = menu.map((item, i) => {
+    //       console.log('ITEM: ', item)
+    //       console.log('I: ', i)
+    //       console.log('this.props.i: ', this.props.i)
+    //       console.log('saveItem: ', saveItem)
+    //     //   i == this.props.i ? updateItem : item
+    //       if(i == this.props.i) {
+    //           return saveItem
+    //       } else { return item }
+    //   })
+    //   console.log('updateMenu: ', updateMenu)
+      console.log('saveItem: ', saveItem)
+      const addToMenu = [...menu, saveItem]
+      console.log('addToMenu: ', addToMenu)
+    //   const dataToPost = this.state.existingItem ? updateMenu : addToMenu
+    //   console.log('dataToPost: ', dataToPost)
       axios.put(`http://192.168.1.65:3000/api/Businesses/${this.props.businessId[0]}`, {
           ...this.props.businessData,
-          menu: updateMenu
+          menu: addToMenu
       })
         .then(res => console.log(res))
         .catch(err => console.log(err))
   }
 
   render() {
+      console.log('ALL THIS:  ', this.state.item, this.state.desc)
     return (
         <KeyboardAvoidingView  style={styles.container} behavior="padding">
             <View>
@@ -72,7 +68,7 @@ export default class OwnerEditItem extends React.Component {
                         name='menu'
                         //onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
                     />}
-                    centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: "Edit Item" }}
+                    centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: "Add Item" }}
                     rightComponent={<Icon
                         name='home'
                         //onPress={() => this.goToOwnerMap(this.props.token, this.props.userId, this.props.businessIds)}
@@ -84,28 +80,27 @@ export default class OwnerEditItem extends React.Component {
                 <TextInput 
                     style={styles.input}
                     onChangeText={item => this.setState({ item: item })}
-                    defaultValue={this.props.menu[this.props.i].item}/>
+                    placeholder='Pommes Frites'/>
                 <Text style={styles.label}>Price</Text>
                 <TextInput
                     style={styles.input}
                     onChangeText={price => this.setState({ price: price })}
-                    defaultValue={this.props.menu[this.props.i].price}/>
+                    placeholder='9.99'/>
                 <Text style={styles.label}>Category</Text>
                 <TextInput
                     style={styles.input}
                     onChangeText={category => this.setState({ category: category })}
-                    defaultValue={this.props.menu[this.props.i].category}/>
+                    placeholder='Entree, Side Dish, Beverage, etc.'/>
                 <Text style={styles.label}>Image</Text>
                 <TextInput
                     style={styles.input}
                     onChangeText={image => this.setState({ image: image })}
-                    defaultValue={this.props.menu[this.props.i].image}/>
+                    placeholder='https://link-to-your-image.com...'/>
                 <Text style={styles.label}>Description</Text> 
                 <TextInput
                     style={styles.textarea}
                     onChangeText={desc => this.setState({ desc: desc })}
-                    defaultValue={this.props.menu[this.props.i].desc}
-                    multiline={true}/>
+                    placeholder="Here is your dish's chance to shine. Give all the details!" multiline={true}/>
                 <CheckBox
                     containerStyle={styles.checkbox}
                     center

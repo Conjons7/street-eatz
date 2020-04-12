@@ -10,15 +10,18 @@ export default class OwnerEditMenu extends React.Component {
     super(props);
     this.state = {
       menu: [],
-      sideMenuView: false
+      sideMenuView: false,
+      businessData: {}
     }
   }
 
   componentDidMount() {
       axios.get(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}`)
         .then(res => {
+            console.log('RES.DATA: ', res.data)
+            businessData = res.data
             menu = res.data.menu
-            this.setState({ menu: res.data.menu })
+            this.setState({ menu: res.data.menu, businessData: res.data })
         })
         .catch(err => alert('Something went wrong.'))
   }
@@ -36,10 +39,18 @@ export default class OwnerEditMenu extends React.Component {
 
   render() {
       const menu = this.state.menu
+      const menuWithNewItem = [...menu, {
+        item: '',
+        price: '',
+        category: '',
+        image: '',
+        desc: '',
+        popular: false
+      }] 
       const displayMenu = menu.map((item, i) => (
         <ListItem
             key={i}
-            onPress={() => Actions.ownerEditItem({ itemData: menu[i] })}
+            onPress={() => Actions.ownerEditItem({ businessData: this.state.businessData, menu: menu, i: i, token: this.props.token, userId: this.props.userId, businessId: this.props.businessIds })}
             leftAvatar={{ source: { uri: item.image } }}
             title={item.item}
             subtitle={item.price}
@@ -72,7 +83,7 @@ export default class OwnerEditMenu extends React.Component {
                 </View>
             : <View></View>}
             <ListItem
-                onPress={() => Actions.ownerEditItem()}
+                onPress={() => Actions.ownerAddItem({ businessData: this.state.businessData, menu: this.state.menu, token: this.props.token, userId: this.props.userId, businessId: this.props.businessIds })}
                 leftIcon={<Icon raised name='add' type='material'/>}
                 title="Add A New Menu Item"
                 titleStyle={styles.listAddItem}
