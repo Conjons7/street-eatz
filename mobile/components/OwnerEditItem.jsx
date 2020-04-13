@@ -121,7 +121,7 @@ export default class OwnerEditItem extends React.Component {
                     onPress={() => this.setState({popular: !this.state.popular})}/>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => this.login(this.state.email, this.state.password)}>
+                    onPress={() => Actions.ownerEditMenu({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}>
                     <Text style={styles.buttonText}> Cancel </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
