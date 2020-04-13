@@ -53,9 +53,14 @@ export default class OwnerSettings extends Component {
           : <View></View>}
         <View></View>
         <TouchableOpacity
-          style={styles.editMenuButton}
+          style={styles.settingsButton}
           onPress={() => Actions.ownerEditMenu({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}>
-          <Text style={styles.editMenuButtonText}> Edit Menu </Text>
+          <Text style={styles.settingsButtonText}> Edit Menu </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.settingsButton}
+          onPress={() => Actions.ownerManageReviews({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}>
+          <Text style={styles.settingsButtonText}> Manage Reviews </Text>
         </TouchableOpacity>
       </View>
     );
@@ -72,18 +77,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#980000',
     alignSelf: 'stretch',
   },
-  editMenuButton: {
+  settingsButton: {
     backgroundColor: '#980000',
     width: 300,
     padding: 10,
     marginTop: 15,
     marginLeft: 100,
     marginRight: 100,
-    marginBottom: 15,
+    marginBottom: 10,
     height: 40,
     borderRadius: 20,
   },
-  editMenuButtonText: {
+  settingsButtonText: {
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold',
