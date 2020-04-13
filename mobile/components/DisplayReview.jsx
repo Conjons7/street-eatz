@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, ScrollView} from 'react-native';
 import { Header, Icon, Rating, Button, AirbnbRating } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import ReviewModal from './ReviewModal';
-import LoginRequiredModal from './LoginRequiredModal'
+import LoginRequiredModal from './LoginRequiredModal';
+import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
 
 export default class DisplayReview extends Component{

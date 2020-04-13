@@ -63,40 +63,40 @@ export default class ReviewModal extends Component {
               onRequestClose={() => this.closeModal()}
               >
                 <View
-                style={{
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center'}}
+                  style={{
+                  flex: 1,
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'}}
                 >
                   <AirbnbRating onFinishRating={ this.ratingCompleted }/>
                   <TextInput
-                  style={ styles.TextInputStyleClass }
-                  underlineColorAndroid='transparent'
-                  placeholder={ 'Tell us about your experience!' }
-                  placeholderTextColor={ '#9E9E9E' }
-                  numberOfLines={ 10 }
-                  multiline={ true }
-                  onChangeText={ this.handleReviewText }
+                    style={ styles.TextInputStyleClass }
+                    underlineColorAndroid='transparent'
+                    placeholder={ 'Tell us about your experience!' }
+                    placeholderTextColor={ '#9E9E9E' }
+                    numberOfLines={ 10 }
+                    multiline={ true }
+                    onChangeText={ this.handleReviewText }
                   />
                   <Button
-                  style={ styles.ButtonStyle }
-                  title='Leave a review'
-                  color='blue'
-                  onPress={() => this.submitReview(this.state.reviewText, this.state.reviewRating)}
+                    style={ styles.ButtonStyle }
+                    title='Leave a review'
+                    color='blue'
+                    onPress={() => this.submitReview(this.state.reviewText, this.state.reviewRating)}
                   />
                 </View>
                 <Button 
-                onPress={() => this.closeModal(this.props.token)}
-                title='Close'
-                color='blue'
+                  onPress={() => this.closeModal(this.props.token)}
+                  title='Close'
+                  color='blue'
                 />
             </Modal>
           </ScrollView>
         </KeyboardAvoidingView>
         <Button
-        onPress={ this.props.token ? ()=>this.openModal(this.props.token) : ()=>this.props.loginRequiredModal()}
-        title='Rate/Review'
+          onPress={ this.props.token ? ()=>this.openModal(this.props.token) : ()=>this.props.loginRequiredModal()}
+          title='Rate/Review'
         />
       </View>
     )

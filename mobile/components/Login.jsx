@@ -16,6 +16,7 @@ class Login extends Component {
   handlePassword = text => this.setState({ password: text })
 
   login = (email, pass) => {
+    console.log(HOST)
     axios.post(`${HOST}/api/Customers/login`, {
         email: email,
         password: pass

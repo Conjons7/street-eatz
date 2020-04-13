@@ -176,8 +176,8 @@ export default class Map extends React.Component {
                                             latitude: location.latitude,
                                             longitude: location.longitude
                                         }}
+                                        style={{width:10, height:10}}
                                     >
-                                        <Image style={styles.marker} source={require('../assets/food-truck.png')} />
                                     </Marker>
                                 );
                             })
