@@ -38,7 +38,7 @@ class Register extends Component {
                 email: email,
                 password: password
             })
-            .then(res => this.goToMap(res.data.id))
+            .then(res => this.props.fromLoginModal === true ? this.goToDisplayReview(res.data.id, res.data.userId, response.data.name) : this.goToMap(res.data.id))
             .catch(errLogin => alert('Please enter a valid username and password.'))
         )
         .catch(errCreate => alert('Oops. Something went wrong.'));
@@ -47,6 +47,12 @@ class Register extends Component {
 
     goToMap = token => Actions.map({token : token});
     goToLogin = () => Actions.login();
+    goToDisplayReview = (token, userId, username) => {
+        axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
+          .then(response => {
+            Actions.displayReview({token: token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, username: username, userId: userId})
+          });
+      }
 
     render() {    
         return (

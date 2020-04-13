@@ -41,7 +41,6 @@ class OwnerRegister extends Component {
                 email: email,
                 password: password
             })
-            // .then(res => this.goToMap(res.data.id))
             .then(res => {
                 axios.get(`${HOST}/api/Owners/${res.data.userId}/businesses`)
                 .then(response => this.goToOwnerMap(res.data.id, res.data.userId, response.data.map(business => business.id)))

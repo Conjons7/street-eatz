@@ -3,20 +3,26 @@ import { View, Text, StyleSheet, ScrollView} from 'react-native';
 import { Header, Icon, Rating, Button, AirbnbRating } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import ReviewModal from './ReviewModal';
-import LoginRequiredModal from './LoginRequiredModal'
+import LoginRequiredModal from './LoginRequiredModal';
+import { HOST } from 'react-native-dotenv';
+import axios from 'axios';
 
 export default class DisplayReview extends Component{
   constructor(props) {
       super(props);
       this.state={
         sideMenuView: false,
-        showLoginRequiredModal: false   
+        showLoginRequiredModal: false,
+        flagged: false   
       }
   }
 
   componentDidMount() {
     let averageReview = this.props.reviews.businessReviews.pop().averageReviewRating;
     this.setState({averageBusinessReviews: averageReview});
+    if (this.props.submit === true) {
+      alert('Your review has been posted')
+    }
   }
 
   displayReviews() {
@@ -47,6 +53,9 @@ export default class DisplayReview extends Component{
               <Icon
               name='flag'
               color='tan'
+              onPress={() => {
+                this.setState({flagged: true})
+                alert('This review has been flagged')}}
             />}
           />
           <Text>{`${review.username} said : \n ${review.text}`}</Text>
@@ -59,8 +68,8 @@ export default class DisplayReview extends Component{
     axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
       .then(res => this.goToLogin())
   }
-  goToLogin = () => Actions.login();
 
+  goToLogin = () => Actions.login();
   goToMap = (token) => Actions.map({token: token});
   goToSettings = (token) => Actions.customerSettings({ token: token });
 
@@ -106,11 +115,19 @@ export default class DisplayReview extends Component{
             <ReviewModal
             token = {this.props.token}
             loginRequiredModal = {() => this.showLoginRequiredModal()}
-            isVisible = {this.state.showLoginRequiredModal}
+            isVisible = { this.state.showLoginRequiredModal }
+            businessId = { this.props.businessId }
+            businessName = { this.props.businessName }
+            username = { this.props.username }
+            userId = { this.props.userId }
+            reviews = { this.props.reviews }
             />
             <LoginRequiredModal
             isVisible = {this.state.showLoginRequiredModal}
             loginRequiredModal = {() => this.hideLoginRequiredModal()}
+            businessId = { this.props.businessId }
+            businessName = { this.props.businessName }
+            reviews = { this.props.reviews }
             />
             <Text>{this.props.businessName}</Text>
             {
