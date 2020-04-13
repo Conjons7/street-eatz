@@ -16,28 +16,26 @@ class Login extends Component {
   handlePassword = text => this.setState({ password: text })
 
   login = (email, pass) => {
-    console.log(HOST)
-    axios.post(`${HOST}/api/Customers/login`, {
+    axios.post(`http://192.168.0.156:3000/api/Customers/login`, {
         email: email,
         password: pass
     })
     .then(res => {
-      axios.get(`${HOST}/api/Customers/${res.data.userId}`)
+      axios.get(`http://192.168.0.156:3000/api/Customers/${res.data.userId}`)
       .then(response => {
-        console.log(response.data.name)
-        this.goToMap(res.data.id, res.data.userId, response.data.name)}) 
+        this.props.fromLoginModal === true ? this.goToDisplayReview(res.data.id, res.data.userId, response.data.name) : this.goToMap(res.data.id, res.data.userId, response.data.name)}) 
       .catch(err => console.log(err))
     })
     .catch(err => alert('Login attempt failed. Wrong username or password.'));
   }
 
   loginOwner = (email, pass) => {
-    axios.post(`${HOST}/api/Owners/login`, {
+    axios.post(`http://192.168.0.156:3000/api/Owners/login`, {
         email: email,
         password: pass
     })
     .then(res => {
-        axios.get(`${HOST}/api/Owners/${res.data.userId}/businesses`)
+        axios.get(`http://192.168.0.156:3000/api/Owners/${res.data.userId}/businesses`)
         .then(response => this.goToOwnerMap(res.data.id, res.data.userId, response.data.map(business => business.id)))
         .catch(err => alert('You have no businesses associated with your account'));
     })
@@ -46,9 +44,14 @@ class Login extends Component {
 
   goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({token: token, userId: userId, businessIds: businessIds});
   goToMap = (token, userId, username) => Actions.map({token: token, userId: userId, username: username});
-  goToRegister = () => Actions.register();
+  goToRegister = () => Actions.register({ businessId: this.props.businessId, businessName: this.props.businessName, reviews: this.props.reviews, fromLoginModal: this.props.fromLoginModal });
   goToOwnerRegister = () => Actions.ownerRegister();
-
+  goToDisplayReview = (token, userId, username) => {
+    axios.get(`http://192.168.0.156:3000/api/Reviews/getreview?id=${this.props.businessId}`)
+      .then(response => {
+        Actions.displayReview({token: token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, username: username, userId: userId})
+      });
+  }
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
@@ -62,7 +65,7 @@ class Login extends Component {
               rightComponent={<Icon
                 name='close'
                 color= '#980000'
-                onPress={() => this.goToMap()}
+                onPress={() => this.props.fromLoginModal === true ? this.goToDisplayReview() : this.goToMap()}
               />}
           />
         </View>

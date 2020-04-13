@@ -19,6 +19,9 @@ export default class DisplayReview extends Component{
   componentDidMount() {
     let averageReview = this.props.reviews.businessReviews.pop().averageReviewRating;
     this.setState({averageBusinessReviews: averageReview});
+    if (this.props.submit === true) {
+      alert('Your review has been posted')
+    }
   }
 
   displayReviews() {
@@ -49,6 +52,7 @@ export default class DisplayReview extends Component{
               <Icon
               name='flag'
               color='tan'
+              onPress={() => alert('This review has been flagged')}
             />}
           />
           <Text>{`${review.username} said : \n ${review.text}`}</Text>
@@ -58,11 +62,11 @@ export default class DisplayReview extends Component{
   }
 
   logOut() {
-    axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
+    axios.post(`http://192.168.0.156:3000/api/Customers/logout?access_token=${this.props.token}`)
       .then(res => this.goToLogin())
   }
-  goToLogin = () => Actions.login();
 
+  goToLogin = () => Actions.login();
   goToMap = (token) => Actions.map({token: token});
   goToSettings = (token) => Actions.customerSettings({ token: token });
 
@@ -110,11 +114,17 @@ export default class DisplayReview extends Component{
             loginRequiredModal = {() => this.showLoginRequiredModal()}
             isVisible = { this.state.showLoginRequiredModal }
             businessId = { this.props.businessId }
+            businessName = { this.props.businessName }
             username = { this.props.username }
+            userId = { this.props.userId }
+            reviews = { this.props.reviews }
             />
             <LoginRequiredModal
             isVisible = {this.state.showLoginRequiredModal}
             loginRequiredModal = {() => this.hideLoginRequiredModal()}
+            businessId = { this.props.businessId }
+            businessName = { this.props.businessName }
+            reviews = { this.props.reviews }
             />
             <Text>{this.props.businessName}</Text>
             {

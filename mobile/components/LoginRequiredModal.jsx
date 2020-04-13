@@ -12,7 +12,8 @@ export default class LoginRequiredModal extends Component{
       }
   }
 
-  goToLogin = () => Actions.login();
+  goToLogin = () => Actions.login({ fromLoginModal: this.state.goToPage, businessId: this.props.businessId, businessName: this.props.businessName, reviews: this.props.reviews });
+  
 
   render() {
     return (
@@ -24,7 +25,7 @@ export default class LoginRequiredModal extends Component{
               visible={ this.props.isVisible }
               animationType='slide'
               transparent={ true }
-              onDismiss={() => this.state.goToPage ? Actions.login() : this.props.LoginRequiredModal}
+              onDismiss={() => this.state.goToPage ? this.goToLogin() : this.props.LoginRequiredModal}
             >
               <View style={ styles.container }>
                 <View style={ styles.ModalView }>

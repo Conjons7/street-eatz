@@ -21,7 +21,7 @@ export default class Menu extends React.Component {
   componentDidMount() {
     const self = this;
     const businessId = this.props.businessId;
-    axios.get(`${HOST}/api/Businesses/${businessId}`)
+    axios.get(`http://192.168.0.156:3000/api/Businesses/${businessId}`)
       .then(res => {
         const sortedItems = [...res.data.menu].map(item => {
           if (item.category == undefined) {
@@ -93,7 +93,7 @@ export default class Menu extends React.Component {
   }
 
   logOut() {
-    axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
+    axios.post(`http://192.168.0.156:3000/api/Customers/logout?access_token=${this.props.token}`)
       .then(res => this.goToLogin())
   }
 
@@ -102,7 +102,7 @@ export default class Menu extends React.Component {
   toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView });
   goToMap = (token) => Actions.map({ token: token });
   goToDisplayReview = (token) => {
-    axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
+    axios.get(`http://192.168.0.156:3000/api/Reviews/getreview?id=${this.props.businessId}`)
       .then(response => {
         Actions.displayReview({token: token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, username: this.props.username})});
   }
