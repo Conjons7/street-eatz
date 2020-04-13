@@ -25,7 +25,7 @@ export default class Map extends React.Component {
             'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
         ])
 
-        this.socket = io.connect(`http://192.168.1.65:3000`, { transports: ['websocket'] });
+        this.socket = io.connect(`${HOST}`, { transports: ['websocket'] });
     }
 
     componentDidMount() {
@@ -57,7 +57,7 @@ export default class Map extends React.Component {
     }
 
     logOut() {
-        axios.post(`http://192.168.1.65:3000/api/Customers/logout?access_token=${this.props.token}`)
+        axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
         .then(res => {
           this.socket.emit('disconnectUser');
           this.goToMap();

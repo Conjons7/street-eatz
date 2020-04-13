@@ -21,7 +21,7 @@ TaskManager.defineTask('watch', ({ data: { locations = [] }, error }) => {
   let latitude = {latitude: locations[locations.length - 1].coords.latitude};
   let longitude = {longitude: locations[locations.length -1 ].coords.longitude};
   location = {...latitude, ...longitude, ...businessId, ...selected, ...businessName, ...priceRange, ...foodStyle};
-  const socket = io.connect(`http://192.168.1.65:3000`, { transports: ['websocket'] });
+  const socket = io.connect(`${HOST}`, { transports: ['websocket'] });
   socket.emit(`updateLocation`, location);
 })
 
@@ -40,7 +40,7 @@ export default class Owner extends Component {
       liveTruck: ''
     }
 
-    this.socket = io.connect(`http://192.168.1.65:3000`, { transports: ['websocket'] })
+    this.socket = io.connect(`${HOST}`, { transports: ['websocket'] })
 
     YellowBox.ignoreWarnings([
       'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
@@ -49,9 +49,9 @@ export default class Owner extends Component {
 
   componentDidMount() {
     const self = this;
-    axios.get(`http://192.168.1.65:3000/api/Owners/${this.props.userId}`)
+    axios.get(`${HOST}/api/Owners/${this.props.userId}`)
       .then(res => self.setState({ name: res.data.name }))
-    axios.get(`http://192.168.1.65:3000/api/Owners/${this.props.userId}/businesses`)
+    axios.get(`${HOST}/api/Owners/${this.props.userId}/businesses`)
       .then(res => self.setState({
           businesses: res.data
         }, this.socketCheck))
@@ -125,7 +125,7 @@ export default class Owner extends Component {
   toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView });
   
   logOut() {
-    axios.post(`http://192.168.1.65:3000/api/Owners/logout?access_token=${this.props.token}`)
+    axios.post(`${HOST}/api/Owners/logout?access_token=${this.props.token}`)
     .then(res => {
       this.socketCheck;
       this.socket.emit('disconnectUser');
