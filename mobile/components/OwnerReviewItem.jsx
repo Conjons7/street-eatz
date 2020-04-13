@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity } from "react-native";
-import { Header, Icon, CheckBox, Button } from 'react-native-elements';
+import { Header, Icon, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
@@ -9,30 +9,18 @@ export default class OwnerEditItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sideMenuView: false
+      sideMenuView: false,
+      response: ''
     }
   }
 
   submit = () => {
-      const saveItem = {
-        item: this.state.item,
-        price: this.state.price,
-        category: this.state.category,
-        image: this.state.image,
-        desc: this.state.desc,
-        popular: this.state.popular
-      }
-      const menu = this.props.menu
-      const updateMenu = menu.map((item, i) => {
-          if(i == this.props.i) {
-              return saveItem
-          } else { return item }
+      const response = this.state.response
+      axios.put(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}/reviews/${this.props.review.id}?access_token=${this.props.token}`, {
+          ...this.props.review,
+          ["response text"]: response
       })
-      axios.put(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}`, {
-          ...this.props.businessData,
-          menu: updateMenu
-      })
-        .then(res => Actions.ownerEditMenu({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds }))
+        .then(res => Actions.ownerManageReviews({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds }))
         .catch(err => alert('Something went wrong.'))
   }
 
@@ -70,41 +58,16 @@ export default class OwnerEditItem extends React.Component {
                 : null}
             </View>
             <ScrollView scrollEnabled={true}>
-                <Text style={styles.label}>Item Name</Text>
-                <TextInput 
-                    style={styles.input}
-                    onChangeText={item => this.setState({ item: item })}
-                    defaultValue={this.props.menu[this.props.i].item}/>
-                <Text style={styles.label}>Price</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={price => this.setState({ price: price })}
-                    defaultValue={this.props.menu[this.props.i].price}/>
-                <Text style={styles.label}>Category</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={category => this.setState({ category: category })}
-                    defaultValue={this.props.menu[this.props.i].category}/>
-                <Text style={styles.label}>Image</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={image => this.setState({ image: image })}
-                    defaultValue={this.props.menu[this.props.i].image}/>
-                <Text style={styles.label}>Description</Text> 
+                <Text style={styles.label}>Respond</Text> 
                 <TextInput
                     style={styles.textarea}
-                    onChangeText={desc => this.setState({ desc: desc })}
-                    defaultValue={this.props.menu[this.props.i].desc}
+                    onChangeText={response => this.setState({ response: response })}
+                    defaultValue={this.props.review['response text'] ? this.props.review['response text'] : null}
+                    placeholder={this.props.review['response text'] ? null : "Tell them how you really feel"}
                     multiline={true}/>
-                <CheckBox
-                    containerStyle={styles.checkbox}
-                    center
-                    title='Mark As Popular Item'
-                    checked={this.state.popular}
-                    onPress={() => this.setState({popular: !this.state.popular})}/>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => this.login(this.state.email, this.state.password)}>
+                    onPress={() => Actions.ownerManageReviews({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}>
                     <Text style={styles.buttonText}> Cancel </Text>
                 </TouchableOpacity>
                 <TouchableOpacity

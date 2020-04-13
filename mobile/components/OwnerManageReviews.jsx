@@ -15,14 +15,11 @@ export default class OwnerManageReviews extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.businessIds[0])
     axios.get(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}/reviews?access_token=${this.props.token}}`)
         .then(res => {
-            console.log('RES: ', res.data)
             this.setState({ reviews: res.data })
         })
-        // .catch(err => alert('Something went wrong.'))
-        .catch(err => console.log(err))
+        .catch(err => alert('Something went wrong.'))
   }
 
   logOut = () => {
@@ -35,17 +32,20 @@ export default class OwnerManageReviews extends React.Component {
     const reviews = this.state.reviews
     const displayReviews = reviews.map((review, i) => {
         const date = review.timeStamp.slice(0, 10)
-        const backgroundColor = review.rating < 3 ? 'red'
-                                : review.rating == 3 ? 'yellow'
-                                : 'green'
+        const backgroundColor = review.rating == 1 ? 'rgb(225, 93, 68)'
+                                : review.rating > 3 ? 'rgb(68, 184, 172)'
+                                : 'rgb(239, 192, 80)'
+        const reviewChecked = review['response text'] ? true : false
         return (
             <ListItem
                 key={i}
-                // onPress={() => Actions.ownerEditItem({ businessData: this.state.businessData, menu: menu, i: i, token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}
+                onPress={() => Actions.ownerReviewItem({ review: review, token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}
                 title={review.text}
+                titleStyle={{ fontSize: 18 }}
                 subtitle={`${review.username} on ${date}`}
                 subtitleStyle={{ color: 'gray', fontStyle: 'italic', fontWeight: 'bold', marginTop: 6 }}
-                badge={{ value: review.rating, textStyle: { color: 'white', fontSize: 18 }, badgeStyle: { backgroundColor: backgroundColor, width: 30, height: 30, borderRadius: 3 }, containerStyle: { marginTop: 0 } }}
+                badge={{ value: review.rating, textStyle: { color: 'white', fontSize: 18 }, badgeStyle: { backgroundColor: backgroundColor, width: 30, height: 30, borderRadius: 15 }, containerStyle: { marginTop: 0 } }}
+                checkBox={{ checked: reviewChecked }}
                 bottomDivider
                 chevron
             />
