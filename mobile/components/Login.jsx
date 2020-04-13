@@ -16,12 +16,12 @@ class Login extends Component {
   handlePassword = text => this.setState({ password: text })
 
   login = (email, pass) => {
-    axios.post(`http://192.168.0.156:3000/api/Customers/login`, {
+    axios.post(`${HOST}/api/Customers/login`, {
         email: email,
         password: pass
     })
     .then(res => {
-      axios.get(`http://192.168.0.156:3000/api/Customers/${res.data.userId}`)
+      axios.get(`${HOST}/api/Customers/${res.data.userId}`)
       .then(response => {
         this.props.fromLoginModal === true ? this.goToDisplayReview(res.data.id, res.data.userId, response.data.name) : this.goToMap(res.data.id, res.data.userId, response.data.name)}) 
       .catch(err => console.log(err))
@@ -30,12 +30,12 @@ class Login extends Component {
   }
 
   loginOwner = (email, pass) => {
-    axios.post(`http://192.168.0.156:3000/api/Owners/login`, {
+    axios.post(`${HOST}/api/Owners/login`, {
         email: email,
         password: pass
     })
     .then(res => {
-        axios.get(`http://192.168.0.156:3000/api/Owners/${res.data.userId}/businesses`)
+        axios.get(`${HOST}/api/Owners/${res.data.userId}/businesses`)
         .then(response => this.goToOwnerMap(res.data.id, res.data.userId, response.data.map(business => business.id)))
         .catch(err => alert('You have no businesses associated with your account'));
     })
@@ -47,7 +47,7 @@ class Login extends Component {
   goToRegister = () => Actions.register({ businessId: this.props.businessId, businessName: this.props.businessName, reviews: this.props.reviews, fromLoginModal: this.props.fromLoginModal });
   goToOwnerRegister = () => Actions.ownerRegister();
   goToDisplayReview = (token, userId, username) => {
-    axios.get(`http://192.168.0.156:3000/api/Reviews/getreview?id=${this.props.businessId}`)
+    axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
       .then(response => {
         Actions.displayReview({token: token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, username: username, userId: userId})
       });

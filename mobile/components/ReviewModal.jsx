@@ -42,7 +42,7 @@ export default class ReviewModal extends Component {
 
   submitReview(text, rating) {
     let date = new Date()
-    axios.post(`http://192.168.0.156:3000/api/Reviews`, {
+    axios.post(`${HOST}/api/Reviews`, {
       text: text,
       timeStamp: date,
       username: this.props.username,
@@ -51,7 +51,6 @@ export default class ReviewModal extends Component {
       businessId: this.props.businessId
     })
     .then((response) => {
-      console.log(response.data)
       this.setState({ submit: true })
       this.goToDisplayReview()
     })
@@ -59,7 +58,7 @@ export default class ReviewModal extends Component {
   }
 
   goToDisplayReview = () => {
-    axios.get(`http://192.168.0.156:3000/api/Reviews/getreview?id=${this.props.businessId}`)
+    axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
       .then(response => {
         Actions.displayReview({username: this.props.username, userId: this.props.userId, token: this.props.token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, submit: this.state.submit})
       });

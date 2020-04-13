@@ -12,7 +12,8 @@ export default class DisplayReview extends Component{
       super(props);
       this.state={
         sideMenuView: false,
-        showLoginRequiredModal: false   
+        showLoginRequiredModal: false,
+        flagged: false   
       }
   }
 
@@ -52,7 +53,9 @@ export default class DisplayReview extends Component{
               <Icon
               name='flag'
               color='tan'
-              onPress={() => alert('This review has been flagged')}
+              onPress={() => {
+                this.setState({flagged: true})
+                alert('This review has been flagged')}}
             />}
           />
           <Text>{`${review.username} said : \n ${review.text}`}</Text>
@@ -62,7 +65,7 @@ export default class DisplayReview extends Component{
   }
 
   logOut() {
-    axios.post(`http://192.168.0.156:3000/api/Customers/logout?access_token=${this.props.token}`)
+    axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
       .then(res => this.goToLogin())
   }
 

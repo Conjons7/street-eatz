@@ -14,7 +14,7 @@ export default class DescriptionMenu extends Component {
     }
 
     logOut() {
-        axios.post(`http://192.168.0.156:3000/api/Customers/logout?access_token=${this.props.token}`)
+        axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
             .then(res => this.goToMap())
     }
 

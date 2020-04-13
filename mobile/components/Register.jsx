@@ -27,14 +27,14 @@ class Register extends Component {
             alert('Your passwords do not match');
             return;
         } else {
-        axios.post(`http://192.168.0.156:3000/api/Customers`, {
+        axios.post(`${HOST}/api/Customers`, {
             name: name,
             number: phoneNumber,
             email: email,
             password: password
         })
         .then((response) =>
-            axios.post(`http://192.168.0.156:3000/api/Customers/login`, {
+            axios.post(`${HOST}/api/Customers/login`, {
                 email: email,
                 password: password
             })
@@ -48,7 +48,7 @@ class Register extends Component {
     goToMap = token => Actions.map({token : token});
     goToLogin = () => Actions.login();
     goToDisplayReview = (token, userId, username) => {
-        axios.get(`http://192.168.0.156:3000/api/Reviews/getreview?id=${this.props.businessId}`)
+        axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
           .then(response => {
             Actions.displayReview({token: token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, username: username, userId: userId})
           });
