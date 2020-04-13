@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { Header, Icon, Button, ListItem } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
@@ -18,8 +18,6 @@ export default class OwnerEditMenu extends React.Component {
   componentDidMount() {
       axios.get(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}`)
         .then(res => {
-            businessData = res.data
-            menu = res.data.menu
             this.setState({ menu: res.data.menu, businessData: res.data })
         })
         .catch(err => alert('Something went wrong.'))
@@ -68,20 +66,22 @@ export default class OwnerEditMenu extends React.Component {
                     <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
                 </View>
             : <View></View>}
-            <ListItem
-                onPress={() => Actions.ownerAddItem({ businessData: this.state.businessData, menu: this.state.menu, token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}
-                leftIcon={<Icon raised name='add' type='material'/>}
-                title="Add A New Menu Item"
-                titleStyle={styles.listAddItem}
-                bottomDivider
-                chevron
-            />
-            {displayMenu ? 
-                <View styles={styles.menu}>
-                    {displayMenu}
-                </View>
-            : null}
-            </View>
+            <ScrollView scrollEnabled={true}>
+                <ListItem
+                    onPress={() => Actions.ownerAddItem({ businessData: this.state.businessData, menu: this.state.menu, token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}
+                    leftIcon={<Icon raised name='add' type='material'/>}
+                    title="Add A New Menu Item"
+                    titleStyle={styles.listAddItem}
+                    bottomDivider
+                    chevron
+                />
+                {displayMenu ? 
+                    <View styles={styles.menu}>
+                        {displayMenu}
+                    </View>
+                : null}
+            </ScrollView>
+        </View>
       )
   }
 }

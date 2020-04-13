@@ -10,6 +10,7 @@ import OwnerSettings from './OwnerSettings';
 import OwnerEditMenu from './OwnerEditMenu';
 import OwnerEditItem from './OwnerEditItem';
 import OwnerAddItem from './OwnerAddItem';
+import OwnerManageReviews from './OwnerManageReviews';
 import CustomerSettings from './CustomerSettings';
 import DescriptionMenu from './DescriptionMenu';
 import OwnerMap from './OwnerMap';
@@ -31,6 +32,7 @@ export default class Routes extends Component {
                 <Scene key= 'ownerEditMenu' component = { OwnerEditMenu } hideNavBar={true} />
                 <Scene key= 'ownerEditItem' component = { OwnerEditItem } hideNavBar={true} />
                 <Scene key= 'ownerAddItem' component = { OwnerAddItem } hideNavBar={true} />
+                <Scene key= 'ownerManageReviews' component = { OwnerManageReviews } hideNavBar={true} />
                 <Scene key= 'customerSettings' component = { CustomerSettings } hideNavBar={true} />
                 <Scene key= 'descriptionMenu' component = { DescriptionMenu } hideNavBar={true} />
                 <Scene key= 'ownerMap' component = { OwnerMap } hideNavBar={true} />
