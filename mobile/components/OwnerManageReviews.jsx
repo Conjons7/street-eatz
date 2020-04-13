@@ -15,7 +15,7 @@ export default class OwnerManageReviews extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}/reviews?access_token=${this.props.token}}`)
+    axios.get(`${HOST}/api/Businesses/${this.props.businessIds[0]}/reviews?access_token=${this.props.token}}`)
         .then(res => {
             this.setState({ reviews: res.data })
         })
@@ -23,7 +23,7 @@ export default class OwnerManageReviews extends React.Component {
   }
 
   logOut = () => {
-    axios.post(`http://192.168.1.65:3000/api/Owners/logout?access_token=${this.props.token}`)
+    axios.post(`${HOST}/api/Owners/logout?access_token=${this.props.token}`)
         .then(res => Actions.map())
         .catch(err => alert('Something went wrong.'))
   }

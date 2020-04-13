@@ -18,7 +18,7 @@ export default class CustomerSettings extends React.Component {
   goToLogin = () => Actions.login();
 
   logOut() {
-    axios.post(`http://192.168.1.65:3000/api/Customers/logout?access_token=${this.props.token}`)
+    axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
         .then(res => this.goToMap())
 }
 

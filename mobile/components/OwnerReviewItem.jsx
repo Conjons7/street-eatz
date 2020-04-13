@@ -16,7 +16,7 @@ export default class OwnerEditItem extends React.Component {
 
   submit = () => {
       const response = this.state.response
-      axios.put(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}/reviews/${this.props.review.id}?access_token=${this.props.token}`, {
+      axios.put(`${HOST}/api/Businesses/${this.props.businessIds[0]}/reviews/${this.props.review.id}?access_token=${this.props.token}`, {
           ...this.props.review,
           ["response text"]: response
       })
@@ -25,7 +25,7 @@ export default class OwnerEditItem extends React.Component {
   }
 
   logOut = () => {
-    axios.post(`http://192.168.1.65:3000/api/Owners/logout?access_token=${this.props.token}`)
+    axios.post(`${HOST}/api/Owners/logout?access_token=${this.props.token}`)
         .then(res => Actions.map())
         .catch(err => alert('Something went wrong.'))
   }

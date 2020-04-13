@@ -14,7 +14,7 @@ export default class OwnerSettings extends Component {
   }
 
   logOut() {
-    axios.post(`http://192.168.1.65:3000/api/Owners/logout?access_token=${this.props.token}`)
+    axios.post(`${HOST}/api/Owners/logout?access_token=${this.props.token}`)
         .then(res => {
           this.goToMap()
         })
