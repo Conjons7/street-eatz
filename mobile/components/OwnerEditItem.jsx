@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Header, Icon, Button, ListItem, Input, CheckBox } from 'react-native-elements';
+import { StyleSheet, View, Text, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity } from "react-native";
+import { Header, Icon, CheckBox, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
@@ -28,12 +28,6 @@ export default class OwnerEditItem extends React.Component {
             desc: this.props.menu[this.props.i].desc ? this.props.menu[0].desc : '',
             popular: this.props.menu[this.props.i].popular ? this.props.menu[0].popular : false
         })
-    //   axios.get(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}`)
-    //     .then(res => {
-    //         menu = res.data.menu
-    //         this.setState({ menu: res.data.menu })
-    //     })
-    //     .catch(err => alert('Something went wrong.'))
   }
 
   submit = () => {
@@ -51,17 +45,23 @@ export default class OwnerEditItem extends React.Component {
               return saveItem
           } else { return item }
       })
-      axios.put(`http://192.168.1.65:3000/api/Businesses/${this.props.businessId[0]}`, {
+      axios.put(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}`, {
           ...this.props.businessData,
           menu: updateMenu
       })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(res => Actions.ownerEditMenu({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds }))
+        .catch(err => alert('Something went wrong.'))
+  }
+
+  logOut = () => {
+    axios.post(`http://192.168.1.65:3000/api/Owners/logout?access_token=${this.props.token}`)
+        .then(res => Actions.map())
+        .catch(err => alert('Something went wrong.'))
   }
 
   render() {
     return (
-        <KeyboardAvoidingView  style={styles.container} behavior="padding">
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
             <View>
                 <Header
                     containerStyle={{
@@ -70,14 +70,21 @@ export default class OwnerEditItem extends React.Component {
                     }}
                     leftComponent={<Icon
                         name='menu'
-                        //onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
+                        onPress={() => this.setState({ sideMenuView: !this.state.sideMenuView })}
                     />}
                     centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: "Edit Item" }}
                     rightComponent={<Icon
                         name='home'
-                        //onPress={() => this.goToOwnerMap(this.props.token, this.props.userId, this.props.businessIds)}
+                        onPress={() => Actions.ownerMap({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}
                     />}
                 />
+                {this.state.sideMenuView ?
+                    <View style={styles.menu}>
+                        <Button title="Broadcast" onPress={() => Actions.owner({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                    <Button title="Settings" onPress={() => Actions.ownerSettings({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                    <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                    </View>
+                : null}
             </View>
             <ScrollView scrollEnabled={true}>
                 <Text style={styles.label}>Item Name</Text>
@@ -119,7 +126,7 @@ export default class OwnerEditItem extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => this.submit()}>
+                    onPress={() => this.submit(this.props.token, this.props.userId, this.props.businessIds)}>
                     <Text style={styles.buttonText}> Submit </Text>
                 </TouchableOpacity>
             </ScrollView>

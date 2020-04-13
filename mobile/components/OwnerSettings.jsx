@@ -28,7 +28,7 @@ export default class OwnerSettings extends Component {
   goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({ token: token, userId: userId, businessIds: businessIds });
 
   render() {
-    console.log(this.props.token)
+    console.log(this.props.businessIds)
     return (
       <View style={styles.container}>
         <Header

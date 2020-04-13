@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Header, Icon, Button, ListItem, Input, CheckBox } from 'react-native-elements';
+import { StyleSheet, View, Text, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity } from "react-native";
+import { Header, Icon, CheckBox, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
@@ -29,33 +29,22 @@ export default class OwnerAddItem extends React.Component {
         popular: this.state.popular
       }
       const menu = this.props.menu
-      console.log('menu: ', menu)
-    //   const updateMenu = menu.map((item, i) => {
-    //       console.log('ITEM: ', item)
-    //       console.log('I: ', i)
-    //       console.log('this.props.i: ', this.props.i)
-    //       console.log('saveItem: ', saveItem)
-    //     //   i == this.props.i ? updateItem : item
-    //       if(i == this.props.i) {
-    //           return saveItem
-    //       } else { return item }
-    //   })
-    //   console.log('updateMenu: ', updateMenu)
-      console.log('saveItem: ', saveItem)
       const addToMenu = [...menu, saveItem]
-      console.log('addToMenu: ', addToMenu)
-    //   const dataToPost = this.state.existingItem ? updateMenu : addToMenu
-    //   console.log('dataToPost: ', dataToPost)
-      axios.put(`http://192.168.1.65:3000/api/Businesses/${this.props.businessId[0]}`, {
+      axios.put(`http://192.168.1.65:3000/api/Businesses/${this.props.businessIds[0]}`, {
           ...this.props.businessData,
           menu: addToMenu
       })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(res => Actions.ownerEditMenu({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds }))
+        .catch(err => alert('Something went wrong.'))
+  }
+
+  logOut = () => {
+    axios.post(`http://192.168.1.65:3000/api/Owners/logout?access_token=${this.props.token}`)
+        .then(res => Actions.map())
+        .catch(err => alert('Something went wrong.'))
   }
 
   render() {
-      console.log('ALL THIS:  ', this.state.item, this.state.desc)
     return (
         <KeyboardAvoidingView  style={styles.container} behavior="padding">
             <View>
@@ -66,14 +55,21 @@ export default class OwnerAddItem extends React.Component {
                     }}
                     leftComponent={<Icon
                         name='menu'
-                        //onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
+                        onPress={() => this.setState({ sideMenuView: !this.state.sideMenuView })}
                     />}
                     centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: "Add Item" }}
                     rightComponent={<Icon
                         name='home'
-                        //onPress={() => this.goToOwnerMap(this.props.token, this.props.userId, this.props.businessIds)}
+                        onPress={() => Actions.ownerMap({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}
                     />}
                 />
+                {this.state.sideMenuView ?
+                    <View style={styles.menu}>
+                        <Button title="Broadcast" onPress={() => Actions.owner({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                    <Button title="Settings" onPress={() => Actions.ownerSettings({ token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                    <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white'}} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                    </View>
+                : null}
             </View>
             <ScrollView scrollEnabled={true}>
                 <Text style={styles.label}>Item Name</Text>
