@@ -89,7 +89,7 @@ export default class FilterModal extends Component{
                             <Picker.Item label="Mexican" value="Mexican" />
                             <Picker.Item label="American" value="American" />
                             <Picker.Item label="Chinese" value="Chinese" />
-                            <Picker.Item label="Viatnamese" value="Viatnamese" />
+                            <Picker.Item label="Vietnamese" value="Vietnamese" />
                         </Picker> 
                     </View>
                     <Button onPress={() => this.closeModal()} title='Close Filter'/>

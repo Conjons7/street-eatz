@@ -21,7 +21,16 @@ class Login extends Component {
         password: pass
     })
     .then(res => {
-      this.goToMap(res.data.id)
+      axios.get(`${HOST}/api/Customers/${res.data.userId}`)
+      .then(response => {
+        switch(this.props.referredTo) {
+          case 'displayReview':
+              this.goToDisplayReview(res.data.id, res.data.userId, response.data.name)
+          default:
+              this.goToMap(res.data.id)
+      }
+      })
+      .catch(err => console.log(err))
     })
     .catch(err => alert('Login attempt failed. Wrong username or password.'));
   }
@@ -40,10 +49,15 @@ class Login extends Component {
   }
 
   goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({token: token, userId: userId, businessIds: businessIds});
-  goToMap = token => Actions.map({token: token});
-  goToRegister = () => Actions.register();
+  goToMap = (token, userId, username) => Actions.map({token: token, userId: userId, username: username});
+  goToRegister = () => Actions.register({ businessId: this.props.businessId, businessName: this.props.businessName, reviews: this.props.reviews, referredTo: this.props.referredTo });
   goToOwnerRegister = () => Actions.ownerRegister();
-
+  goToDisplayReview = (token, userId, username) => {
+    axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
+      .then(response => {
+        Actions.displayReview({token: token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, username: username, userId: userId})
+      });
+  }
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
@@ -57,11 +71,17 @@ class Login extends Component {
               rightComponent={<Icon
                 name='close'
                 color= '#980000'
-                onPress={() => this.goToMap()}
+                onPress={() => {
+                  switch(this.props.referredTo) {
+                    case 'displayReview':
+                        this.goToDisplayReview()
+                    default:
+                        this.goToMap()
+                }}}
               />}
           />
         </View>
-        <Image style={styles.logo} source={require('../assets/logo.png')} />
+        <Image style={styles.logo} source={require('../assets/logo.png')}/>
         <ScrollView scrollEnabled={true}>
           <AnimatedInput 
             inputStyle={styles.input}

@@ -1,113 +1,104 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Modal, TextInput, KeyboardAvoidingView, ScrollView} from 'react-native';
+import { View, StyleSheet, Text, TextInput, Modal, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { Header, Icon, Rating, AirbnbRating, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 
-
 export default class LoginRequiredModal extends Component{
-    constructor(props) {
-        super(props);
-        this.state={
-            
-        }
-    }
+  constructor(props) {
+    super(props);
+      this.state = {
+        referredTo: '',
+        isModalVisible: false
+      }
+  }
 
-    openModal() {
-        this.setState({
-            modalVisible: true
-        })}
+  goToLogin = () => Actions.login({ referredTo: this.state.referredTo, businessId: this.props.businessId, businessName: this.props.businessName, reviews: this.props.reviews });
+  
 
-    closeModal() {
-        this.setState({
-            modalVisible: false
-        })}
-    
-    submitReview() {
-
-    }
-
-        render() {
-            return (
-                
-
-                <View style={styles.container}>
-                 <KeyboardAvoidingView  behavior="padding" enabled>
-                  <ScrollView scrollEnabled={true}>
-                   <Modal
-                     raised
-                     visible={this.props.isVisible}
-                     animationType="slide"
-                     transparent={true}
-                     onRequestClose={() => this.closeModal()}>   
-                      <View style={styles.container}>
-                      <View style={styles.modalView}>
-                       <Text style={styles.text}>
-                        Sorry! You will need to be logged in to Street Eatz to use this feature. Would you like to Register/Login?
-                       </Text>
-                        <Button 
-                         raised
-                         title="outline button"
-                         type="outline"
-                         style={styles.ButtonStyle}
-                         onPress={() => this.props.loginRequiredModal()} title='No Thanks! Take Me Back.' color="blue"
-                         />
-                      </View>
-                      </View>
-                   </Modal>
-                  </ScrollView>
-                 </KeyboardAvoidingView>         
+  render() {
+    return (
+      <View style={ styles.container }>
+        <KeyboardAvoidingView behavior='padding'>
+          <ScrollView scrollEnabled={ true }>
+            <Modal
+              raised
+              visible={ this.props.isVisible }
+              animationType='slide'
+              transparent={ true }
+              onDismiss={() => this.state.referredTo ? this.goToLogin() : this.props.LoginRequiredModal}
+            >
+              <View style={ styles.container }>
+                <View style={ styles.ModalView }>
+                  <Text style={ styles.text }>
+                    Please log in to write a review
+                  </Text>
+                  <Button
+                    style={styles.LoginStyle}
+                    onPress={() => {
+                      this.setState({ referredTo: 'displayReview' })
+                      this.props.loginRequiredModal()
+                    }}
+                    title='Log in/Register'
+                  />
+                  <Button
+                    title="outline button"
+                    type="outline"
+                    style={styles.CloseStyle}
+                    onPress={() => {this.props.loginRequiredModal()}}
+                    title='Close'
+                  />
                 </View>
-       
+              </View>
+            </Modal>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    )
+  }
+}
 
-            )
-        }   
-    }
-    const styles = StyleSheet.create({
-        container: {
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 10
-        },
-        text:{
-            justifyContent: 'center',
-            fontWeight: 'bold',
-            fontSize: 18,
-            color: 'white',
-            textAlign: 'center',
-            marginTop: 10,
-            marginLeft: 0,
-            marginBottom: 10,
-            width: 275,
-            height: 800,
-            borderWidth: 3,
-            borderColor: 'black',
-            borderRadius: 2,
-            backgroundColor : '#980000',
-            textAlignVertical: 'auto',
-            height: 125
-            },
-        ButtonStyle: {
-            // backgroundColor: "white",
-            width: 275,
-            borderWidth: 0,
-            marginTop: 0,
-            paddingTop: 0,
-
-            },
-        ModalView: {
-            margin: 20,
-            backgroundColor: "black",
-            borderRadius: 20,
-            padding: 35,
-            alignItems: "center",
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5
-        }
-    })
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10
+  },
+  text:{
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    fontSize: 22,
+    color: 'black',
+    textAlign: 'center',
+    paddingTop: 20,
+    width: 275,
+    height: 100,
+    borderWidth: 3,
+    borderColor: 'white',
+    borderRadius: 10,
+    textAlignVertical: 'auto',
+  },
+  LoginStyle: {
+    width: 200,
+    position: 'relative',
+    top: -10
+  },
+  CloseStyle: {
+    width: 200
+  },
+  ModalView: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    paddingTop: 20,
+    paddingBottom: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  }
+})
