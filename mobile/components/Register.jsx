@@ -38,7 +38,14 @@ class Register extends Component {
                 email: email,
                 password: password
             })
-            .then(res => this.props.fromLoginModal === true ? this.goToDisplayReview(res.data.id, res.data.userId, response.data.name) : this.goToMap(res.data.id))
+            .then(res => {
+                switch(this.props.referredTo) {
+                    case 'displayReview':
+                        this.goToDisplayReview(res.data.id, res.data.userId, response.data.name)
+                    default:
+                        this.goToMap(res.data.id)
+                }     
+            })
             .catch(errLogin => alert('Please enter a valid username and password.'))
         )
         .catch(errCreate => alert('Oops. Something went wrong.'));

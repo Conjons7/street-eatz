@@ -23,7 +23,13 @@ class Login extends Component {
     .then(res => {
       axios.get(`${HOST}/api/Customers/${res.data.userId}`)
       .then(response => {
-        this.props.fromLoginModal === true ? this.goToDisplayReview(res.data.id, res.data.userId, response.data.name) : this.goToMap(res.data.id, res.data.userId, response.data.name)}) 
+        switch(this.props.referredTo) {
+          case 'displayReview':
+              this.goToDisplayReview(res.data.id, res.data.userId, response.data.name)
+          default:
+              this.goToMap(res.data.id)
+      }
+      })
       .catch(err => console.log(err))
     })
     .catch(err => alert('Login attempt failed. Wrong username or password.'));
@@ -44,7 +50,7 @@ class Login extends Component {
 
   goToOwnerMap = (token, userId, businessIds) => Actions.ownerMap({token: token, userId: userId, businessIds: businessIds});
   goToMap = (token, userId, username) => Actions.map({token: token, userId: userId, username: username});
-  goToRegister = () => Actions.register({ businessId: this.props.businessId, businessName: this.props.businessName, reviews: this.props.reviews, fromLoginModal: this.props.fromLoginModal });
+  goToRegister = () => Actions.register({ businessId: this.props.businessId, businessName: this.props.businessName, reviews: this.props.reviews, referredTo: this.props.referredTo });
   goToOwnerRegister = () => Actions.ownerRegister();
   goToDisplayReview = (token, userId, username) => {
     axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
@@ -65,7 +71,13 @@ class Login extends Component {
               rightComponent={<Icon
                 name='close'
                 color= '#980000'
-                onPress={() => this.props.fromLoginModal === true ? this.goToDisplayReview() : this.goToMap()}
+                onPress={() => {
+                  switch(this.props.referredTo) {
+                    case 'displayReview':
+                        this.goToDisplayReview()
+                    default:
+                        this.goToMap()
+                }}}
               />}
           />
         </View>

@@ -7,12 +7,12 @@ export default class LoginRequiredModal extends Component{
   constructor(props) {
     super(props);
       this.state = {
-        goToPage: false,
+        referredTo: '',
         isModalVisible: false
       }
   }
 
-  goToLogin = () => Actions.login({ fromLoginModal: this.state.goToPage, businessId: this.props.businessId, businessName: this.props.businessName, reviews: this.props.reviews });
+  goToLogin = () => Actions.login({ referredTo: this.state.referredTo, businessId: this.props.businessId, businessName: this.props.businessName, reviews: this.props.reviews });
   
 
   render() {
@@ -25,17 +25,17 @@ export default class LoginRequiredModal extends Component{
               visible={ this.props.isVisible }
               animationType='slide'
               transparent={ true }
-              onDismiss={() => this.state.goToPage ? this.goToLogin() : this.props.LoginRequiredModal}
+              onDismiss={() => this.state.referredTo ? this.goToLogin() : this.props.LoginRequiredModal}
             >
               <View style={ styles.container }>
                 <View style={ styles.ModalView }>
                   <Text style={ styles.text }>
-                    Log in to write a review
+                    Please log in to write a review
                   </Text>
                   <Button
                     style={styles.LoginStyle}
                     onPress={() => {
-                      this.setState({ goToPage: true })
+                      this.setState({ referredTo: 'displayReview' })
                       this.props.loginRequiredModal()
                     }}
                     title='Log in/Register'
