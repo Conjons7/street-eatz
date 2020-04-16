@@ -70,8 +70,8 @@ export default class DisplayReview extends Component{
   }
 
   goToLogin = () => Actions.login();
-  goToMap = (token) => Actions.map({token: token});
-  goToSettings = (token) => Actions.customerSettings({ token: token });
+  goToMap = (token, userId) => Actions.map({token: token, userId: userId});
+  goToSettings = (token, userId) => Actions.customerSettings({ token: token, userId: userId });
 
   showLoginRequiredModal = () => this.setState({ showLoginRequiredModal: true});
   hideLoginRequiredModal = () => this.setState({ showLoginRequiredModal: false});
@@ -99,12 +99,12 @@ export default class DisplayReview extends Component{
         centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: 'Rate & Review:' }}
         rightComponent={<Icon
           name='home'
-          onPress={() => this.goToMap(this.props.token)}
+          onPress={() => this.goToMap(this.props.token, this.props.userId)}
         />}
         />
         {this.state.sideMenuView ?
           <View style={styles.menu}>
-            <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+            <Button title="Settings" onPress={() => this.goToSettings(this.props.token, this.props.userId)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
             {
               this.props.token ? logoutButton : loginButton
             }

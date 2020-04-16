@@ -104,10 +104,11 @@ export default class Menu extends React.Component {
   goToDisplayReview = (token) => {
     axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
       .then(response => {
-        Actions.displayReview({token: token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, username: this.props.username})});
+        Actions.displayReview({token: token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, username: this.props.username, userId: this.props.userId})});
   }
 
   render() {
+    console.log(this.props.username, this.props.userId)
     let loginButton = <Button title="Login" onPress={() => this.goToLogin()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />;
     let logoutButton = <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
     return (
@@ -124,12 +125,12 @@ export default class Menu extends React.Component {
           centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: this.state.businessName }}
           rightComponent={<Icon
             name='home'
-            onPress={() => this.goToMap(this.props.token)}
+            onPress={() => this.goToMap(this.props.token, this.props.userId)}
           />}
         />
         {this.state.sideMenuView ?
           <View style={styles.menu}>
-            <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+            <Button title="Settings" onPress={() => this.goToSettings(this.props.token, this.props.userId)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
             {
               this.props.token ? logoutButton : loginButton
             }
@@ -140,7 +141,7 @@ export default class Menu extends React.Component {
           <Text style={styles.textPhone}>{this.state.businessNumber}</Text> 
           <Text style={styles.textWebpage} onPress={() => Linking.openURL('http://' + this.state.businessUrl)}>{this.state.businessUrl}</Text>
           <ShareFeature businessName={this.state.businessName} />
-          <Button title="Ratings + Reviews" onPress={() => this.goToDisplayReview(this.props.token)} buttonStyle={{backgroundColor: '#980000'}} />
+          <Button title="Ratings + Reviews" onPress={() => this.goToDisplayReview(this.props.token, this.props.userId)} buttonStyle={{backgroundColor: '#980000'}} />
         </View>
         <ScrollView scrollEnabled={true}>
           {this.state.items.length > 0 ?

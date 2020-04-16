@@ -12,8 +12,7 @@ export default class ReviewModal extends Component {
         modalVisible: false,
         reviewText: '',
         reviewRating: 0,
-        username: '',
-        submit: false
+        username: ''
     }
 
     this.ratingCompleted = this.ratingCompleted.bind(this)
@@ -50,18 +49,7 @@ export default class ReviewModal extends Component {
       isHidden: false,
       businessId: this.props.businessId
     })
-    .then((response) => {
-      this.setState({ submit: true })
-      this.goToDisplayReview()
-    })
     .catch(error => console.log(error))
-  }
-
-  goToDisplayReview = () => {
-    axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
-      .then(response => {
-        Actions.displayReview({username: this.props.username, userId: this.props.userId, token: this.props.token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, submit: this.state.submit})
-      });
   }
 
   render() {
@@ -95,10 +83,7 @@ export default class ReviewModal extends Component {
                     style={ styles.ButtonStyle }
                     title='Leave a review'
                     color='blue'
-                    onPress={() => {
-                      this.submitReview(this.state.reviewText, this.state.reviewRating)
-                      this.closeModal(this.props.token)
-                    }}
+                    onPress={() => this.submitReview(this.state.reviewText, this.state.reviewRating)}
                   />
                 </View>
                 <Button 

@@ -15,6 +15,7 @@ export default class Map extends React.Component {
             location: null,
             errorMessage: null,
             sideMenuView: false,
+            name: null
         };
         this.mounted = false;
         
@@ -27,6 +28,10 @@ export default class Map extends React.Component {
 
     componentDidMount() {
         this.mounted = true;
+        const self = this;
+
+        axios.get(`${HOST}/api/Owners/${this.props.userId}`)
+            .then(res => self.setState({ name: res.data.name }));
 
         navigator.geolocation.getCurrentPosition(
             position => {
@@ -80,12 +85,13 @@ export default class Map extends React.Component {
                         name='menu'
                         onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
                     />}
+                    centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: this.state.name }}
                     rightComponent={{ icon: 'home', color: '#fff' }}
                     />
                     {this.state.sideMenuView ?
                     <View style={styles.menu}>
-                        <Button title="Broadcast" onPress={() => this.goToOwner(this.props.token, this.props.userId, this.props.businessIds)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
-                        <Button title="Settings" onPress={() => this.goToSettings(this.props.token, this.props.userId, this.props.businessIds)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                        <Button title="Broadcast" onPress={() => this.goToOwner(this.props.token, this.props.userId, this.props.businessIds, this.props.ownerName)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                        <Button title="Settings" onPress={() => this.goToSettings(this.props.token, this.props.userId, this.props.businessIds, this.props.ownerName)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
                         <Button title="Logout" onPress={() => this.logOut()} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }}  titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}}/>
                     </View>
                     : <View></View>}
