@@ -61,10 +61,6 @@ class Login extends Component {
               />}
           />
         </View>
-<<<<<<< HEAD
-        <Image style={styles.logo} source={require('../assets/logo.png')} />
-=======
->>>>>>> loginRegisterView
         <ScrollView scrollEnabled={true}>
           <Image style={styles.logo} source={require('../assets/logo.png')}/>
           <AnimatedInput 
