@@ -61,8 +61,12 @@ class Login extends Component {
               />}
           />
         </View>
+<<<<<<< HEAD
         <Image style={styles.logo} source={require('../assets/logo.png')} />
+=======
+>>>>>>> loginRegisterView
         <ScrollView scrollEnabled={true}>
+          <Image style={styles.logo} source={require('../assets/logo.png')}/>
           <AnimatedInput 
             inputStyle={styles.input}
             labelStyle={styles.labelInput}
@@ -156,9 +160,10 @@ const styles = StyleSheet.create({
   logo: {
     width: 340,
     height: 325,
-    marginBottom: 30,
+    marginBottom: 35,
     marginTop: 35,
-    marginLeft: 17,
+    marginLeft: 'auto',
+    marginRight: 'auto',
     resizeMode: 'contain',
     justifyContent: 'center',
   }
