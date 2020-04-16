@@ -170,11 +170,13 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     logo: {
-        width: 375,
-        height: 350,
+        width: 340,
+        height: 325,
+        marginBottom: 35,
         marginTop: 35,
-        marginLeft: 17,
+        marginLeft: 'auto',
+        marginRight: 'auto',
         resizeMode: 'contain',
         justifyContent: 'center',
-    }
+      }
 });
