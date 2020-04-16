@@ -58,9 +58,9 @@ class OwnerRegister extends Component {
 
     render() {    
         return (
-            <KeyboardAvoidingView style={styles.container}>
-                <Image style={styles.logo} source={require('../assets/logo.png')} />
+            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                 <ScrollView scrollEnabled={true}>
+                    <Image style={styles.logo} source={require('../assets/logo.png')} />
                     <AnimatedInput 
                         inputStyle={styles.input}
                         labelStyle={styles.labelInput}
