@@ -13,6 +13,7 @@ export default class Map extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            name: null,
             location: null,
             sideMenuView: false,
             distanceFilter: '',
@@ -30,6 +31,9 @@ export default class Map extends React.Component {
 
     componentDidMount() {
         this.mounted = true;
+
+        axios.get(`${HOST}/api/Customers/${this.props.userId}`)
+            .then(res => this.setState({ name: res.data.name }));
 
         navigator.geolocation.getCurrentPosition(
             position => {
@@ -65,9 +69,9 @@ export default class Map extends React.Component {
       }
     
     goToLogin = () => Actions.login();
-    goToSettings = token => Actions.customerSettings({token: token});
+    goToSettings = (token, userId) => Actions.customerSettings({token: token, userId: userId});
     toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView });
-    goToMenu = (token, businessId, username) => Actions.menu({token: token, businessId: businessId, username: username});
+    goToMenu = (token, businessId, username, userId) => Actions.menu({token: token, businessId: businessId, username: username, userId: userId});
     goToMap = () => Actions.map();
     distance(lat1, lon1, lat2, lon2, unit) {
         if ((lat1 == lat2) && (lon1 == lon2)) {
@@ -136,11 +140,12 @@ export default class Map extends React.Component {
                         name='menu'
                         onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
                     />}
+                    centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: this.state.name }}
                     rightComponent={{ icon: 'home', color: '#fff' }}
                     />
                     {this.state.sideMenuView ?
                     <View style={styles.menu}>
-                        <Button title="Settings" onPress={() => this.goToSettings(this.props.token)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
+                        <Button title="Settings" onPress={() => this.goToSettings(this.props.token, this.props.userId)} buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
                         {
                             this.props.token ? logoutButton : loginButton
                         }
@@ -169,7 +174,7 @@ export default class Map extends React.Component {
                                 return (
                                     <Marker
                                         title={location.businessName}
-                                        onPress={() => this.goToMenu(this.props.token, location.businessId, this.props.username)}
+                                        onPress={() => this.goToMenu(this.props.token, location.businessId, this.props.username, this.props.userId)}
                                         businessId={location.businessId}
                                         key={count}
                                         coordinate={{

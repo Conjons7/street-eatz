@@ -14,7 +14,7 @@ export default class CustomerSettings extends React.Component {
   }
 
   toggleSideMenu= sideMenuView => this.setState({ sideMenuView: !sideMenuView });
-  goToMap = token => Actions.map({ token: token });
+  goToMap = (token, userId) => Actions.map({ token: token, userId: userId });
   goToLogin = () => Actions.login();
 
   logOut() {
@@ -36,18 +36,15 @@ export default class CustomerSettings extends React.Component {
             name='menu'
             onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
           />}
-          centerComponent={{ style: { color: '#fff', fontSize: 20 }, text: this.state.name }}
+          centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: 'Settings' }}
           rightComponent={<Icon
             name='home'
-            onPress={() => this.goToMap(this.props.token)}
+            onPress={() => this.goToMap(this.props.token, this.props.userId)}
           />}
         />
         {this.state.sideMenuView ?
           <View style={styles.menu}>
-            <Button title="Settings" buttonStyle={{ backgroundColor: '#980000', borderBottomWidth: .45, borderBottomColor: 'white' }} titleStyle={{ color: "white", fontSize: 22, fontWeight: 'bold'}} />
-            {
-              this.props.token ? logoutButton : loginButton
-            }
+            {this.props.token ? logoutButton : loginButton}
           </View>
           : <View></View>}
         <View></View>

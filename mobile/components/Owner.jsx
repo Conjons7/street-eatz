@@ -34,7 +34,6 @@ export default class Owner extends Component {
       location: null,
       loading: false,
       sideMenuView: false,
-      name: '',
       businesses: [],
       selected: 0,
       liveTruck: ''
@@ -49,8 +48,6 @@ export default class Owner extends Component {
 
   componentDidMount() {
     const self = this;
-    axios.get(`${HOST}/api/Owners/${this.props.userId}`)
-      .then(res => self.setState({ name: res.data.name }))
     axios.get(`${HOST}/api/Owners/${this.props.userId}/businesses`)
       .then(res => self.setState({
           businesses: res.data
@@ -151,7 +148,7 @@ export default class Owner extends Component {
             name='menu'
             onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
           />}
-          centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: this.state.name }}
+          centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: 'Broadcast' }}
           rightComponent={<Icon
             name='home'
             onPress={() => this.goToOwnerMap(this.props.token, this.props.userId, this.props.businessIds)}
