@@ -72,7 +72,7 @@ class Register extends Component {
                         underlineColorAndroid='transparent'
                         autoCapitalize='none'
                         onChangeText={this.handleName}>
-                        Name
+                        NAME RIGHT HERE!!!!!!!!!
                         </AnimatedInput>
                     <AnimatedInput
                         inputStyle={styles.input}
