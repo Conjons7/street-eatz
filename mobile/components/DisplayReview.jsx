@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image} from 'react-native';
 import { Header, Icon, Rating, Button, AirbnbRating } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import ReviewModal from './ReviewModal';
@@ -25,40 +25,75 @@ export default class DisplayReview extends Component{
     }
   }
 
+  daysAgo(postDate, today) {
+    let msPerDay = 24 * 60 * 60 * 1000;
+    let days = Math.round(Math.abs((today.getTime() - postDate.getTime()) / (msPerDay)));
+    if (days === 0) {
+      return 'Posted today'
+    } else if (days === 1) {
+      return 'Posted 1 day ago'
+    } else if (days > 1 && days < 31) {
+      return `Posted ${days} days ago`
+    } else if (days > 30 && days < 365) {
+      days /= 30
+      return days > 1 ? `Posted ${Math.round(days)} months ago` : `Posted ${Math.round(days)} month ago`
+    } else {
+      return `Posted over a year ago`
+    }
+  }
+
   displayReviews() {
     const reviews = this.props.reviews.businessReviews;
 
     return reviews.map((review, i) => {
-      key: {review.id};
-      let date = new Date(review.timeStamp)
+      let date = new Date(review.timeStamp);
+      let today = new Date();
+
       return (
-        <View style={{ flex: 1 }}>
+        <View key={review.id} style={styles.reviewContainer}>
           <Header
-            containerStyle={{
-              backgroundColor: '#980000',
-            }}
+            containerStyle={styles.reviewHeader}
             leftComponent={
-              <Text>{date.toDateString()}</Text>
-            }
-            centerComponent={
-              <Rating
-                imageSize={20}
-                readonly
-                startingValue={review.rating}
-                fractions={1}
-                style={styles.rating}
-              />
+              <View>
+                <Image style={styles.profilePicture} source={require('../assets/blank-prof-pic.png')}/>
+                <Text
+                  style={styles.profileUsername}>
+                   {review.username}
+                </Text>
+                <Text
+                  style={styles.reviewPostDate}>
+                  {this.daysAgo(date, today)}
+                </Text>
+                
+              </View>
             }
             rightComponent={
-              <Icon
-              name='flag'
-              color='tan'
-              onPress={() => {
-                this.setState({flagged: true})
-                alert('This review has been flagged')}}
-            />}
+              <View
+                style={styles.ratingPosition}>
+                <Rating
+                  imageSize={25}
+                  readonly
+                  startingValue={review.rating}
+                  fractions={1}
+                  tintColor='#ffe599'
+                />
+              </View>
+            }
           />
-          <Text>{`${review.username} said : \n ${review.text}`}</Text>
+          <View>
+            <Text style={styles.reviewText}> {review.text} </Text>
+            <Icon
+              name='flag'
+              containerStyle={styles.flagIconPosition}
+              size={25}
+              color='tan'
+              underlayColor='#ffe599'
+              onPress={() => {
+                this.setState({ flagged: true })
+                alert('This review has been flagged')
+              }}
+            />
+          </View>
         </View>
       )
     })
@@ -88,19 +123,15 @@ export default class DisplayReview extends Component{
     return (
       <View style={styles.container}>
         <Header
-        containerStyle={{
-          backgroundColor: '#980000',
-          // justifyContent: 'space-around',
-        }}
-        leftComponent={ <Icon
-          name='menu'
-          onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
-        />}
-        centerComponent={{ style: { color: '#fff', fontSize: 25, fontWeight: 'bold' }, text: 'Rate & Review:' }}
-        rightComponent={<Icon
-          name='home'
-          onPress={() => this.goToMap(this.props.token)}
-        />}
+          containerStyle={styles.header}
+          leftComponent={ <Icon
+            name='menu'
+            onPress={() => this.toggleSideMenu(this.state.sideMenuView)}
+          />}
+          centerComponent={{ style: styles.reviewHeaderText, text: 'Reviews' }}
+          rightComponent={<Icon
+            name='home'
+            onPress={() => this.goToMap(this.props.token)}/>}
         />
         {this.state.sideMenuView ?
           <View style={styles.menu}>
@@ -111,7 +142,35 @@ export default class DisplayReview extends Component{
           </View>
           : <View></View>
         }
-        <View style={styles.headerContainer}>
+        {/* {
+          businessReviews.length > 0 ?
+          <View style={styles.reviewHeader}>
+            {
+              this.state.averageBusinessReviews ? 
+                <Rating
+                  imageSize={20}
+                  readonly
+                  startingValue={this.state.averageBusinessReviews}
+                  fractions={1}
+                  tintColor='#980000'
+                /> :
+                <Text> No ratings available for this food truck.</Text>
+            }
+          </View>
+          :
+          <Text>No Reviews Available For This Truck</Text>
+        } */}
+        <ScrollView scrollEnabled={true}>
+          <View style={styles.reviewScroll} >{this.displayReviews()}</View>
+        </ScrollView>
+        <View>
+            <LoginRequiredModal
+            isVisible = {this.state.showLoginRequiredModal}
+            loginRequiredModal = {() => this.hideLoginRequiredModal()}
+            businessId = { this.props.businessId }
+            businessName = { this.props.businessName }
+            reviews = { this.props.reviews }
+            />
             <ReviewModal
             token = {this.props.token}
             loginRequiredModal = {() => this.showLoginRequiredModal()}
@@ -121,35 +180,8 @@ export default class DisplayReview extends Component{
             username = { this.props.username }
             userId = { this.props.userId }
             reviews = { this.props.reviews }
-            />
-            <LoginRequiredModal
-            isVisible = {this.state.showLoginRequiredModal}
-            loginRequiredModal = {() => this.hideLoginRequiredModal()}
-            businessId = { this.props.businessId }
-            businessName = { this.props.businessName }
-            reviews = { this.props.reviews }
-            />
-            <Text>{this.props.businessName}</Text>
-            {
-              this.state.averageBusinessReviews ? 
-                <Rating
-                imageSize={20}
-                readonly
-                startingValue={this.state.averageBusinessReviews}
-                fractions={1}
-                style={styles.rating}
-                /> :
-                <Text> No ratings available for this food truck.</Text>
-            }
+        />
         </View>
-        <ScrollView scrollEnabled={true}>
-          { businessReviews.length > 0 ?
-            <Text style={styles.reviewHeader}>Reviews</Text>
-            :
-            <Text>No Reviews Available For This Truck</Text>
-          }
-          <View style={{ paddingTop: 40, flex: 1 }} >{this.displayReviews()}</View>
-        </ScrollView>
       </View>
     )
   }
@@ -161,48 +193,74 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection: 'column',
     },
-    TextInputStyleClass:{
-        textAlign: 'center',
-        marginTop: 0,
-        marginLeft: 11,
-        width: 0,
-        height: 0,
-        borderWidth: 2,
-        borderColor: '#9E9E9E',
-        borderRadius: 3 ,
-        backgroundColor : "#FFFFFF",
-        height: 150
-        },
-    ButtonStyle: {
-        backgroundColor: "#fff",
-        borderWidth: 3,
-        paddingTop: 10,
-        },
+    header: {
+      backgroundColor: '#980000',
+      justifyContent: 'space-around'
+    },
     menu: {
       backgroundColor: '#980000',
       alignSelf: 'stretch'
     },
-    headerContainer: {
-      flexDirection: 'column',
-      flex: 0,
-      height: 250,
-      resizeMode: 'stretch',
-      justifyContent: 'center',
-      backgroundColor: '#980000',
-      paddingBottom: 10,
+    reviewContainer: {
+      flex: 1,
       borderBottomColor: 'white',
-      borderWidth: .45
-    },
+      borderBottomWidth: .5,
+      marginTop: 5
+    }, 
     reviewHeader: {
-      fontSize: 30,
-      fontWeight: 'bold',
-      width: '100%',
-      backgroundColor: '#980000',
-      color: 'white',
-      textAlign: 'center',
-      marginBottom: -30
+      backgroundColor: '#ffe599',
+      paddingBottom: 20,
+      marginBottom: 10,
+      paddingTop: 10,
+      borderBottomColor: '#ffe599'
     },
-    rating: {
-      color: 'black'
+    reviewHeaderText: {
+      fontSize: 25,
+      fontWeight: 'bold',
+      color: 'white'
+    },
+    reviewText: {
+      position: 'relative',
+      top: -30,
+      margin: 15,
+      marginTop: 0,
+      marginBottom: -5
+    },
+    profilePicture: {
+      width: 34,
+      height: 34,
+      justifyContent: 'center',
+      borderRadius: 30,
+      position: 'relative',
+      top: 3
+    },
+    profileUsername: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      position: 'relative',
+      right: -38,
+      top: -30,
+      marginRight: -40
+    },
+    reviewPostDate: {
+      fontSize: 10.5,
+      marginRight: -40,
+      position: 'relative',
+      right: -38,
+      top: -30
+    },
+    ratingPosition: {
+      position: 'absolute',
+      right: 15,
+      top: -28
+    },
+    flagIconPosition: {
+      position: 'absolute',
+      right: 15,
+      bottom: 8
+    },
+    reviewScroll: {
+      paddingTop: 0,
+      flex: 1
     }
 })
