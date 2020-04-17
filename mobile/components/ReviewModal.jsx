@@ -4,7 +4,6 @@ import { Header, Icon, Rating, AirbnbRating } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
-
 export default class ReviewModal extends Component {
   constructor(props) { 
     super(props);
@@ -12,33 +11,28 @@ export default class ReviewModal extends Component {
         modalVisible: false,
         reviewText: '',
         reviewRating: 0,
-        username: ''
+        username: '',
+        submit: false
     }
-
     this.ratingCompleted = this.ratingCompleted.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
   }
-
   handleReviewText(text) {
     this.setState({ reviewText: text })
   }
-
   ratingCompleted(rating) {
     this.setState({ reviewRating: rating })
   }
-
   openModal() {
     this.setState({
       modalVisible: true
     })
   }
-
   closeModal() {
     this.setState({
       modalVisible: false
     })
   }
-
   submitReview(text, rating) {
     let date = new Date()
     axios.post(`${HOST}/api/Reviews`, {
@@ -49,9 +43,18 @@ export default class ReviewModal extends Component {
       isHidden: false,
       businessId: this.props.businessId
     })
+    .then((response) => {
+      this.setState({ submit: true })
+      this.goToDisplayReview()
+    })
     .catch(error => console.log(error))
   }
-
+  goToDisplayReview = () => {
+    axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
+      .then(response => {
+        Actions.displayReview({username: this.props.username, userId: this.props.userId, token: this.props.token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, submit: this.state.submit})
+      });
+  }
   render() {
     return (
       <View style={ styles.container }>
@@ -83,7 +86,10 @@ export default class ReviewModal extends Component {
                     style={ styles.ButtonStyle }
                     title='Leave a review'
                     color='blue'
-                    onPress={() => this.submitReview(this.state.reviewText, this.state.reviewRating)}
+                    onPress={() => {
+                      this.submitReview(this.state.reviewText, this.state.reviewRating)
+                      this.closeModal(this.props.token)
+                    }}
                   />
                 </View>
                 <Button 
@@ -102,7 +108,6 @@ export default class ReviewModal extends Component {
     )
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
