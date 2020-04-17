@@ -64,11 +64,11 @@ export default class ReviewItem extends Component {
               name='flag'
               containerStyle={styles.flagIconPosition}
               size={25}
-              color={this.state.flagged ? 'red' : 'tan'}
+              color={this.state.flagged ? 'gray' : 'tan'}
               underlayColor='#ffe599'
               onPress={() => {
                 this.setState({ flagged: !this.state.flagged })
-                alert('This review has been flagged')
+                {this.state.flagged ? alert('This review has been unflagged') : alert('This review has been flagged')}
               }}
             />
           </View>
