@@ -18,22 +18,27 @@ export default class ReviewModal extends Component {
     this.ratingCompleted = this.ratingCompleted.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
   }
+
   handleReviewText(text) {
     this.setState({ reviewText: text })
   }
+
   ratingCompleted(rating) {
     this.setState({ reviewRating: rating })
   }
+
   openModal() {
     this.setState({
       modalVisible: true
     })
   }
+
   closeModal() {
     this.setState({
       modalVisible: false
     })
   }
+
   submitReview(text, rating) {
     let date = new Date()
     axios.post(`${HOST}/api/Reviews`, {
@@ -50,12 +55,14 @@ export default class ReviewModal extends Component {
     })
     .catch(error => console.log(error))
   }
+
   goToDisplayReview = () => {
     axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
       .then(response => {
         Actions.displayReview({username: this.props.username, userId: this.props.userId, token: this.props.token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, submit: this.state.submit})
       });
   }
+  
   render() {
     return (
       <View style={ styles.container }>
