@@ -140,7 +140,7 @@ export default class Menu extends React.Component {
           <Text style={styles.textPhone}>{this.state.businessNumber}</Text> 
           <Text style={styles.textWebpage} onPress={() => Linking.openURL('http://' + this.state.businessUrl)}>{this.state.businessUrl}</Text>
           <ShareFeature businessName={this.state.businessName} />
-          <Button title="Ratings + Reviews" onPress={() => this.goToDisplayReview(this.props.token, this.props.userId)} buttonStyle={{backgroundColor: '#980000'}} />
+          <Button title="Reviews" onPress={() => this.goToDisplayReview(this.props.token)} buttonStyle={{backgroundColor: '#980000'}} />
         </View>
         <ScrollView scrollEnabled={true}>
           {this.state.items.length > 0 ?
