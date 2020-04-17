@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
 import { Header, Icon, Rating } from 'react-native-elements';
+import LoginRequiredModal from './LoginRequiredModal';
 
 export default class ReviewItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      flagged: false
+      flagged: false,
+      showLoginRequiredModal: false
     }
   }
 
@@ -26,6 +28,14 @@ export default class ReviewItem extends Component {
       return `Posted over a year ago`
     }
   }
+
+  handleFlagClick = () => {
+    this.props.token ? this.setState({ flagged: !this.state.flagged }) : this.showLoginRequiredModal()
+    this.state.flagged ? alert('This review has been unflagged') : alert('This review has been flagged')
+  }
+
+  hideLoginRequiredModal = () => this.setState({ showLoginRequiredModal: false})
+  showLoginRequiredModal = () => this.setState({ showLoginRequiredModal: true})
 
   render() {
     return (
@@ -59,6 +69,13 @@ export default class ReviewItem extends Component {
             }
           />
           <View>
+            <LoginRequiredModal
+              isVisible = {this.state.showLoginRequiredModal}
+              loginRequiredModal = {() => this.hideLoginRequiredModal()}
+              businessId = { this.props.businessId }
+              businessName = { this.props.businessName }
+              reviews = { this.props.review }
+            />
             <Text style={styles.reviewText}> {this.props.review.text} </Text>
             <Icon
               name='flag'
@@ -66,10 +83,7 @@ export default class ReviewItem extends Component {
               size={25}
               color={this.state.flagged ? 'gray' : 'tan'}
               underlayColor='#ffe599'
-              onPress={() => {
-                this.setState({ flagged: !this.state.flagged })
-                {this.state.flagged ? alert('This review has been unflagged') : alert('This review has been flagged')}
-              }}
+              onPress={() => {this.handleFlagClick()}}
             />
           </View>
         </View>

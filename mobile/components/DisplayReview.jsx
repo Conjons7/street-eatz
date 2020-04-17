@@ -36,6 +36,10 @@ export default class DisplayReview extends Component{
           date={new Date(review.timeStamp)}
           today={new Date()}
           review={review}
+          showLoginModal={() => this.showLoginRequiredModal()}
+          token={this.props.token}
+          businessId = { this.props.businessId }
+          businessName = {this.props.businessName}
         />
       )
     })
