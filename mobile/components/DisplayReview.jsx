@@ -6,14 +6,14 @@ import ReviewModal from './ReviewModal';
 import LoginRequiredModal from './LoginRequiredModal';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
+import ReviewItem from './ReviewItem';
 
 export default class DisplayReview extends Component{
   constructor(props) {
       super(props);
       this.state={
         sideMenuView: false,
-        showLoginRequiredModal: false,
-        flagged: false   
+        showLoginRequiredModal: false
       }
   }
 
@@ -25,76 +25,18 @@ export default class DisplayReview extends Component{
     }
   }
 
-  daysAgo(postDate, today) {
-    let msPerDay = 24 * 60 * 60 * 1000;
-    let days = Math.round(Math.abs((today.getTime() - postDate.getTime()) / (msPerDay)));
-    if (days === 0) {
-      return 'Posted today'
-    } else if (days === 1) {
-      return 'Posted 1 day ago'
-    } else if (days > 1 && days < 31) {
-      return `Posted ${days} days ago`
-    } else if (days > 30 && days < 365) {
-      days /= 30
-      return days > 1 ? `Posted ${Math.round(days)} months ago` : `Posted ${Math.round(days)} month ago`
-    } else {
-      return `Posted over a year ago`
-    }
-  }
 
   displayReviews() {
     const reviews = this.props.reviews.businessReviews;
 
     return reviews.map((review, i) => {
-      let date = new Date(review.timeStamp);
-      let today = new Date();
 
       return (
-        <View key={review.id} style={styles.reviewContainer}>
-          <Header
-            containerStyle={styles.reviewHeader}
-            leftComponent={
-              <View>
-                <Image style={styles.profilePicture} source={require('../assets/blank-prof-pic.png')}/>
-                <Text
-                  style={styles.profileUsername}>
-                   {review.username}
-                </Text>
-                <Text
-                  style={styles.reviewPostDate}>
-                  {this.daysAgo(date, today)}
-                </Text>
-                
-              </View>
-            }
-            rightComponent={
-              <View
-                style={styles.ratingPosition}>
-                <Rating
-                  imageSize={25}
-                  readonly
-                  startingValue={review.rating}
-                  fractions={1}
-                  tintColor='#ffe599'
-                />
-              </View>
-            }
-          />
-          <View>
-            <Text style={styles.reviewText}> {review.text} </Text>
-            <Icon
-              name='flag'
-              containerStyle={styles.flagIconPosition}
-              size={25}
-              color='tan'
-              underlayColor='#ffe599'
-              onPress={() => {
-                this.setState({ flagged: true })
-                alert('This review has been flagged')
-              }}
-            />
-          </View>
-        </View>
+        <ReviewItem
+          date={new Date(review.timeStamp)}
+          today={new Date()}
+          review={review}
+        />
       )
     })
   }
@@ -201,66 +143,13 @@ const styles = StyleSheet.create({
       backgroundColor: '#980000',
       alignSelf: 'stretch'
     },
-    reviewContainer: {
-      flex: 1,
-      borderBottomColor: 'white',
-      borderBottomWidth: .5,
-      marginTop: 5
+    reviewScroll: {
+      paddingTop: 0,
+      flex: 1
     }, 
-    reviewHeader: {
-      backgroundColor: '#ffe599',
-      paddingBottom: 20,
-      marginBottom: 10,
-      paddingTop: 10,
-      borderBottomColor: '#ffe599'
-    },
     reviewHeaderText: {
       fontSize: 25,
       fontWeight: 'bold',
       color: 'white'
-    },
-    reviewText: {
-      position: 'relative',
-      top: -30,
-      margin: 15,
-      marginTop: 0,
-      marginBottom: -5
-    },
-    profilePicture: {
-      width: 34,
-      height: 34,
-      justifyContent: 'center',
-      borderRadius: 30,
-      position: 'relative',
-      top: 3
-    },
-    profileUsername: {
-      fontSize: 14,
-      fontWeight: 'bold',
-      position: 'relative',
-      right: -38,
-      top: -30,
-      marginRight: -40
-    },
-    reviewPostDate: {
-      fontSize: 10.5,
-      marginRight: -40,
-      position: 'relative',
-      right: -38,
-      top: -30
-    },
-    ratingPosition: {
-      position: 'absolute',
-      right: 15,
-      top: -28
-    },
-    flagIconPosition: {
-      position: 'absolute',
-      right: 15,
-      bottom: 8
-    },
-    reviewScroll: {
-      paddingTop: 0,
-      flex: 1
     }
 })
