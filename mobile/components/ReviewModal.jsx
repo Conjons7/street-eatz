@@ -15,6 +15,7 @@ export default class ReviewModal extends Component {
         username: '',
         submit: false
     }
+    
     this.ratingCompleted = this.ratingCompleted.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
   }
@@ -62,7 +63,7 @@ export default class ReviewModal extends Component {
         Actions.displayReview({username: this.props.username, userId: this.props.userId, token: this.props.token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, submit: this.state.submit})
       });
   }
-  
+
   render() {
     return (
       <View style={ styles.container }>
