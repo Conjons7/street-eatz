@@ -30,14 +30,24 @@ export default class ReviewItem extends Component {
   }
 
   handleFlagClick = () => {
-    this.props.token ? this.setState({ flagged: !this.state.flagged }) : this.showLoginRequiredModal()
-    this.state.flagged ? alert('This review has been unflagged') : alert('This review has been flagged')
+    // this.props.token && this.state.flagged ?  : this.showLoginRequiredModal()
+    // this.state.flagged && this.props.token ? alert('This review has been unflagged') : alert('This review has been flagged')
+    if (this.props.token && this.state.flagged) {
+      this.setState({ flagged: !this.state.flagged })
+      alert('This review has been unflagged')
+    } else if (this.props.token && !this.state.flagged) {
+      this.setState({ flagged: !this.state.flagged })
+      alert('This review has been flagged')
+    } else {
+      this.showLoginRequiredModal()
+    }
   }
 
   hideLoginRequiredModal = () => this.setState({ showLoginRequiredModal: false})
   showLoginRequiredModal = () => this.setState({ showLoginRequiredModal: true})
 
   render() {
+    console.log(this.props.token)
     return (
       <View key={this.props.review.id} style={styles.reviewContainer}>
           <Header

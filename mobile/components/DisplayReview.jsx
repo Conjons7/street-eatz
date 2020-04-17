@@ -88,7 +88,7 @@ export default class DisplayReview extends Component{
           </View>
           : <View></View>
         }
-        {/* {
+        {
           businessReviews.length > 0 ?
           <View style={styles.reviewHeader}>
             {
@@ -98,14 +98,14 @@ export default class DisplayReview extends Component{
                   readonly
                   startingValue={this.state.averageBusinessReviews}
                   fractions={1}
-                  tintColor='#980000'
+                  tintColor='#ffe599'
                 /> :
                 <Text> No ratings available for this food truck.</Text>
             }
           </View>
           :
           <Text>No Reviews Available For This Truck</Text>
-        } */}
+        }
         <ScrollView scrollEnabled={true}>
           <View style={styles.reviewScroll} >{this.displayReviews()}</View>
         </ScrollView>
