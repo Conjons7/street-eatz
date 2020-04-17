@@ -27,7 +27,7 @@ class Login extends Component {
           case 'displayReview':	
               this.goToDisplayReview(res.data.id, res.data.userId, response.data.name)	
           default:	
-              this.goToMap(res.data.id)	
+              this.goToMap(res.data.id, res.data.userId)	
       }	
       })	
       .catch(err => console.log(err))
