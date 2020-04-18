@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet, Modal, TextInput, KeyboardAvoidingView, ScrollView} from 'react-native';
+import { View, Button, StyleSheet, Modal, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity} from 'react-native';
 import { Header, Icon, Rating, AirbnbRating } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
+
 export default class ReviewModal extends Component {
   constructor(props) { 
     super(props);
@@ -14,25 +15,31 @@ export default class ReviewModal extends Component {
         username: '',
         submit: false
     }
+    
     this.ratingCompleted = this.ratingCompleted.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
   }
+
   handleReviewText(text) {
     this.setState({ reviewText: text })
   }
+
   ratingCompleted(rating) {
     this.setState({ reviewRating: rating })
   }
+
   openModal() {
     this.setState({
       modalVisible: true
     })
   }
+
   closeModal() {
     this.setState({
       modalVisible: false
     })
   }
+
   submitReview(text, rating) {
     let date = new Date()
     axios.post(`${HOST}/api/Reviews`, {
@@ -50,12 +57,14 @@ export default class ReviewModal extends Component {
     })
     .catch(error => console.log(error))
   }
+
   goToDisplayReview = () => {
     axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
       .then(response => {
         Actions.displayReview({username: this.props.username, userId: this.props.userId, token: this.props.token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, submit: this.state.submit})
       });
   }
+
   render() {
     return (
       <View style={ styles.container }>
@@ -65,6 +74,7 @@ export default class ReviewModal extends Component {
               style={ styles.modal }
               visible={ this.state.modalVisible }
               onRequestClose={() => this.closeModal()}
+              animationType='slide'
               >
                 <View
                   style={{
@@ -101,10 +111,15 @@ export default class ReviewModal extends Component {
             </Modal>
           </ScrollView>
         </KeyboardAvoidingView>
-        <Button
-          onPress={ this.props.token ? ()=>this.openModal(this.props.token) : ()=>this.props.loginRequiredModal()}
-          title='Rate/Review'
-        />
+        <TouchableOpacity
+          raised
+          style={styles.openReviewModal}
+          onPress={ this.props.token ? ()=>this.openModal(this.props.token) : ()=>this.props.loginRequiredModal()}>
+          <Icon
+            name='create'
+            color='white'>
+          </Icon>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -131,5 +146,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 3,
     paddingTop: 10
+  },
+  openReviewModal: {
+    backgroundColor: '#980000',
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+    justifyContent: 'center',
+    alignItems:'center',
+    position: 'absolute',
+    bottom: 20,
+    right: 20
   }
 })
