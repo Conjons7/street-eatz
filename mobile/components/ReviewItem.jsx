@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
 import { Header, Icon, Rating } from 'react-native-elements';
 import LoginRequiredModal from './LoginRequiredModal';
+import moment from 'moment';
 
 export default class ReviewItem extends Component {
   constructor(props) {
@@ -13,25 +14,11 @@ export default class ReviewItem extends Component {
   }
 
   daysAgo(postDate, today) {
-    let msPerDay = 24 * 60 * 60 * 1000;
-    let days = Math.round(Math.abs((today.getTime() - postDate.getTime()) / (msPerDay)));
-    if (days === 0) {
-      return 'Posted today'
-    } else if (days === 1) {
-      return 'Posted 1 day ago'
-    } else if (days > 1 && days < 31) {
-      return `Posted ${days} days ago`
-    } else if (days > 30 && days < 365) {
-      days /= 30
-      return days > 1 ? `Posted ${Math.round(days)} months ago` : `Posted ${Math.round(days)} month ago`
-    } else {
-      return `Posted over a year ago`
-    }
+    let days = moment(postDate).from(today)
+    return `Posted ${days}`
   }
 
   handleFlagClick = () => {
-    // this.props.token && this.state.flagged ?  : this.showLoginRequiredModal()
-    // this.state.flagged && this.props.token ? alert('This review has been unflagged') : alert('This review has been flagged')
     if (this.props.token && this.state.flagged) {
       this.setState({ flagged: !this.state.flagged })
       alert('This review has been unflagged')
@@ -47,7 +34,6 @@ export default class ReviewItem extends Component {
   showLoginRequiredModal = () => this.setState({ showLoginRequiredModal: true})
 
   render() {
-    console.log(this.props.token)
     return (
       <View key={this.props.review.id} style={styles.reviewContainer}>
           <Header
@@ -61,7 +47,7 @@ export default class ReviewItem extends Component {
                 </Text>
                 <Text
                   style={styles.reviewPostDate}>
-                  {this.daysAgo(this.props.date, this.props.today)}
+                  {this.daysAgo(this.props.date, moment().format())}
                 </Text>
               </View>
             }
@@ -152,7 +138,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: -30,
     margin: 15,
-    marginTop: 0,
+    marginTop: -25,
     marginBottom: -5
   }
 })

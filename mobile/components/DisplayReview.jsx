@@ -7,6 +7,7 @@ import LoginRequiredModal from './LoginRequiredModal';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
 import ReviewItem from './ReviewItem';
+import moment from 'moment';
 
 export default class DisplayReview extends Component{
   constructor(props) {
@@ -33,8 +34,7 @@ export default class DisplayReview extends Component{
 
       return (
         <ReviewItem
-          date={new Date(review.timeStamp)}
-          today={new Date()}
+          date={review.timeStamp}
           review={review}
           showLoginModal={() => this.showLoginRequiredModal()}
           token={this.props.token}
