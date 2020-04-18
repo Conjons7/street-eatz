@@ -7,7 +7,6 @@ import LoginRequiredModal from './LoginRequiredModal';
 import { HOST } from 'react-native-dotenv';
 import axios from 'axios';
 import ReviewItem from './ReviewItem';
-import moment from 'moment';
 
 export default class DisplayReview extends Component{
   constructor(props) {
