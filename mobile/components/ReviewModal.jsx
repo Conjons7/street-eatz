@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet, Modal, TextInput, KeyboardAvoidingView, ScrollView} from 'react-native';
+import { View, Button, StyleSheet, Modal, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity} from 'react-native';
 import { Header, Icon, Rating, AirbnbRating } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import { HOST } from 'react-native-dotenv';
@@ -15,7 +15,7 @@ export default class ReviewModal extends Component {
         username: '',
         submit: false
     }
-
+    
     this.ratingCompleted = this.ratingCompleted.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
   }
@@ -73,6 +73,7 @@ export default class ReviewModal extends Component {
               style={ styles.modal }
               visible={ this.state.modalVisible }
               onRequestClose={() => this.closeModal()}
+              animationType='slide'
               >
                 <View
                   style={{
@@ -109,15 +110,19 @@ export default class ReviewModal extends Component {
             </Modal>
           </ScrollView>
         </KeyboardAvoidingView>
-        <Button
-          onPress={ this.props.token ? ()=>this.openModal(this.props.token) : ()=>this.props.loginRequiredModal()}
-          title='Rate/Review'
-        />
+        <TouchableOpacity
+          raised
+          style={styles.openReviewModal}
+          onPress={ this.props.token ? ()=>this.openModal(this.props.token) : ()=>this.props.loginRequiredModal()}>
+          <Icon
+            name='create'
+            color='white'>
+          </Icon>
+        </TouchableOpacity>
       </View>
     )
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
@@ -140,5 +145,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 3,
     paddingTop: 10
+  },
+  openReviewModal: {
+    backgroundColor: '#980000',
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+    justifyContent: 'center',
+    alignItems:'center',
+    position: 'absolute',
+    bottom: 20,
+    right: 20
   }
 })

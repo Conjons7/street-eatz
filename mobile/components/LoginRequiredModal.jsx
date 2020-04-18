@@ -33,7 +33,7 @@ export default class LoginRequiredModal extends Component{
                     Please log in to write a review
                   </Text>
                   <Button
-                    style={styles.LoginStyle}
+                    buttonStyle={styles.LoginStyle}
                     onPress={() => {
                       this.setState({ referredTo: 'displayReview' })
                       this.props.loginRequiredModal()
@@ -43,7 +43,8 @@ export default class LoginRequiredModal extends Component{
                   <Button
                     title="outline button"
                     type="outline"
-                    style={styles.CloseStyle}
+                    buttonStyle={styles.CloseStyle}
+                    titleStyle={{color:'#980000'}}
                     onPress={() => {this.props.loginRequiredModal()}}
                     title='Close'
                   />
@@ -81,10 +82,12 @@ const styles = StyleSheet.create({
   LoginStyle: {
     width: 200,
     position: 'relative',
-    top: -10
+    top: -10,
+    backgroundColor: '#980000'
   },
   CloseStyle: {
-    width: 200
+    width: 200,
+    borderColor: '#980000'
   },
   ModalView: {
     backgroundColor: "white",
