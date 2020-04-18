@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
-import { Header, Icon, Rating } from 'react-native-elements';
+import { Header, Icon, Rating, ListItem } from 'react-native-elements';
 import LoginRequiredModal from './LoginRequiredModal';
 import moment from 'moment';
 
@@ -82,6 +82,15 @@ export default class ReviewItem extends Component {
               onPress={() => {this.handleFlagClick()}}
             />
           </View>
+
+          <ListItem
+          style={{borderBottomColor: 'black', borderBottomWidth: '.5em'}}
+            title="Hey man, just take it easy"
+            subtitle="Bob from Business responded"
+            subtitleStyle={{ color: 'gray', fontStyle: 'italic', fontWeight: 'bold', marginTop: 6 }}
+            bottomDivider
+          />
+
         </View>
     )
   }
@@ -139,6 +148,6 @@ const styles = StyleSheet.create({
     top: -30,
     margin: 15,
     marginTop: -25,
-    marginBottom: -5
+    marginBottom: -5,
   }
 })
