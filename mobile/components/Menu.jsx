@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     borderColor: 'darkgrey',
     borderBottomWidth: 1,
-    height: 120,
+    height: 140,
     width: '100%',
     flex: 1
   },
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     width: '75%',
     position: 'relative',
-    top: 5 
+    top: -5 
   },
   title: {
     fontWeight: 'bold',
