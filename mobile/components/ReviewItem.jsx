@@ -30,10 +30,12 @@ export default class ReviewItem extends Component {
     } else {
       this.showLoginRequiredModal()
     }
-    axios.put(`${HOST}/api/Reviews/${this.props.review.id}`, {
-      ...this.props.review,
-      isHidden: !this.props.review.isHidden
-    }) 
+    if (this.props.token) {
+      axios.put(`${HOST}/api/Reviews/${this.props.review.id}`, {
+        ...this.props.review,
+        isHidden: !this.state.flagged
+      }) 
+    }
       
   }
 
