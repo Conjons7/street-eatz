@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
 import { Header, Icon, Rating } from 'react-native-elements';
+import { HOST } from 'react-native-dotenv';
 import LoginRequiredModal from './LoginRequiredModal';
 import moment from 'moment';
+import axios from 'axios';
 
 export default class ReviewItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      flagged: false,
+      flagged: this.props.review.isHidden,
       showLoginRequiredModal: false
     }
   }
@@ -19,15 +21,22 @@ export default class ReviewItem extends Component {
   }
 
   handleFlagClick = () => {
-    if (this.props.token && this.state.flagged) {
+    if (this.props.token && this.props.review.isHidden === true) {
       this.setState({ flagged: !this.state.flagged })
       alert('This review has been unflagged')
-    } else if (this.props.token && !this.state.flagged) {
+    } else if (this.props.token && this.props.review.isHidden === false) {
       this.setState({ flagged: !this.state.flagged })
       alert('This review has been flagged')
     } else {
       this.showLoginRequiredModal()
     }
+    if (this.props.token) {
+      axios.put(`${HOST}/api/Reviews/${this.props.review.id}`, {
+        ...this.props.review,
+        isHidden: !this.state.flagged
+      }) 
+    }
+      
   }
 
   hideLoginRequiredModal = () => this.setState({ showLoginRequiredModal: false})
@@ -77,7 +86,7 @@ export default class ReviewItem extends Component {
               name='flag'
               containerStyle={styles.flagIconPosition}
               size={25}
-              color={this.state.flagged ? 'gray' : 'tan'}
+              color={this.props.token && this.state.flagged ? 'red' : 'tan'}
               underlayColor='#ffe599'
               onPress={() => {this.handleFlagClick()}}
             />
