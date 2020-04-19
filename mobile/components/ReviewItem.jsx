@@ -86,7 +86,7 @@ export default class ReviewItem extends Component {
               name='flag'
               containerStyle={styles.flagIconPosition}
               size={25}
-              color={this.props.token && this.state.flagged ? 'gray' : 'tan'}
+              color={this.props.token && this.state.flagged ? 'red' : 'tan'}
               underlayColor='#ffe599'
               onPress={() => {this.handleFlagClick()}}
             />
