@@ -80,7 +80,7 @@ export default class ReviewItem extends Component {
             />
             {this.props.review['response text'] ? 
               <React.Fragment>
-                <Text style={styles.ownerName}>{this.props.businessName} responded:</Text>
+                <Text style={styles.ownerName}>{this.props.businessName} commented:</Text>
                 <Text style={styles.reviewResponse}>{this.props.review['response text']}</Text>
               </React.Fragment>
             : null}
