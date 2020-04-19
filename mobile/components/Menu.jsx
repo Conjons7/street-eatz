@@ -6,7 +6,6 @@ import { Header, Icon, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import ShareFeature from './ShareFeature';
 import MenuFilterModal from './MenuFilterModal';
-import MenuDisplay from './MenuDisplay';
 
 export default class Menu extends React.Component {
   constructor(props) {
@@ -78,61 +77,98 @@ export default class Menu extends React.Component {
   displayMenu() {
     let count = 0;
     const menu = this.state.items;
-
-    return menu.map((item, i) => {
-      count++
+    let filteredItems = []
+    for (let i = 1; i < this.state.category.length; i++) {
+      if (this.state.category[i].selectedCategory === true) {
+        filteredItems.push(this.state.category[i].itemCategory)
+      }
+    }
+    //displaying menu for filtered items
+    if (filteredItems.length > 0) {
       return (
-        // <MenuDisplay
-        //   category = {item.category}
-        //   menu = {menu}
-        //   image = {item.image}
-        //   description = {item.desc}
-        //   price = {item.price}
-        //   item = {item.item}
-        //   token = {this.props.token}
-        //   businessId = {this.props.businessId}
-        //   index = {i}
-        //   key = {count}
-        // />
-        <View style={{ flex: 1 }}>
-          {/* conditional to check if categories aren't undefined or equal to the previous category */}
-          {menu[i - 1] !== undefined && item.category !== menu[i - 1].category ?
-            <View style={{ flex: 1, alignItems: 'center' }}>
-              <Text style={styles.menuLabel}>{item.category}</Text>
-            </View>
-            :
-            <View></View>
-          }
-          <TouchableOpacity
-            onPress={() => this.goToDescriptionMenu(item.image, item.desc, item.price, item.item, this.props.token, this.props.businessId, item.category)}
-            style={styles.containerFoodItem}
-            key={count}>
-            {item.image ?
-              <View>
-                <Image style={styles.photo}
-                  source={{ uri: item.image }}
-                />
+        //taking filtered items and creating separate categories
+        filteredItems.map(item => {
+          return (
+            <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, alignItems: 'center' }}>
+                <Text style={styles.menuLabel}>{item}</Text>
               </View>
-              :
-              <View></View>
-            }
-            <View style={styles.containerItemInfo}>
-              <Text style={styles.title}>{item.item}</Text>
-              <Text style={styles.desc}>{item.desc && item.desc.length > 55 ? item.desc.slice(0, 55) + '...' : item.desc}</Text>
-              <Text style={styles.price}>${item.price}</Text>
+              {
+                //if categories are equal, the items will display under that category
+                menu.map((items) => {
+                  count++
+                  if (items.category === item) {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => this.goToDescriptionMenu(items.image, items.desc, items.price, items.item, this.props.token, this.props.businessId, items.category)}
+                        style={styles.containerFoodItem}
+                        key={count}>
+                      {
+                        items.image ?
+                          <View>
+                            <Image style={styles.photo} source={{ uri: items.image }}/>
+                          </View>
+                          :
+                          <View></View>
+                      }
+                        <View style={styles.containerItemInfo}>
+                          <Text style={styles.title}>{items.item}</Text>
+                          <Text style={styles.desc}>{items.desc && items.desc.length > 55 ? items.desc.slice(0, 55) + '...' : items.desc}</Text>
+                          <Text style={styles.price}>${items.price}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    )
+                  }
+                })
+              }
             </View>
-          </TouchableOpacity>
-        </View>
+          )
+        })
       )
-    })
+    } else {
+      //displaying menu for all items
+      return (
+        this.state.category.map(item => {
+          return (
+            <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, alignItems: 'center' }}>
+                <Text style={styles.menuLabel}>{item.itemCategory === 'All' ? null : item.itemCategory}</Text>
+              </View>
+              {
+                //if categories are equal, the items will display under that category
+                menu.map((items) => {
+                  count++
+                  if (items.category === item.itemCategory) {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => this.goToDescriptionMenu(items.image, items.desc, items.price, items.item, this.props.token, this.props.businessId, items.category)}
+                        style={styles.containerFoodItem}
+                        key={count}>
+                      {
+                        items.image ?
+                          <View>
+                            <Image style={styles.photo} source={{ uri: items.image }}/>
+                          </View>
+                          :
+                          <View></View>
+                      }
+                        <View style={styles.containerItemInfo}>
+                          <Text style={styles.title}>{items.item}</Text>
+                          <Text style={styles.desc}>{items.desc && items.desc.length > 55 ? items.desc.slice(0, 55) + '...' : items.desc}</Text>
+                          <Text style={styles.price}>${items.price}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    )
+                  }
+                })
+              }
+            </View>
+          )
+        })
+      )
+    }
   }
 
-  logOut() {
-    axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
-      .then(res => this.goToLogin())
-  }
-
-  updateMenuCategory = (filter) => this.setState({menuCategoryFilter: filter});
   handleFilterSelect(category) {
     let list = this.state.category;
     for (let i = 0; i < list.length; i++) {
@@ -155,6 +191,13 @@ export default class Menu extends React.Component {
     }
     this.setState({category: list})
   }
+
+  logOut() {
+    axios.post(`${HOST}/api/Customers/logout?access_token=${this.props.token}`)
+      .then(res => this.goToLogin())
+  }
+
+  updateMenuCategory = (filter) => this.setState({menuCategoryFilter: filter});
 
   goToLogin = () => Actions.login();
   goToSettings = (token) => Actions.customerSettings({ token: token });
@@ -205,7 +248,6 @@ export default class Menu extends React.Component {
               <Text style={{textAlign: 'center', fontSize: 20, color: 'white'}}>Reviews</Text>
             </TouchableOpacity>
           </View>
-          
         </View>
         <MenuFilterModal
           menuCategoryFilter = {this.state.menuCategoryFilter}
@@ -213,15 +255,9 @@ export default class Menu extends React.Component {
           menu = {this.state.category}
           handleFilterSelect = {(category) => this.handleFilterSelect(category)}
         />
-        
-        {this.state.category[0].selectedCategory === true && this.state.items.length > 0 ?
-          <ScrollView scrollEnabled={true}>
-            <Text style={styles.firstMenuLabel}>{this.state.items[0].category}</Text>
-            <View style={{ paddingTop: 40, flex: 1 }} >{this.displayMenu()}</View>
-          </ScrollView>
-          :
-          <View></View>
-        }
+        <ScrollView scrollEnabled={true}>
+          {this.displayMenu()}
+        </ScrollView>
       </View>
     )
   }
@@ -240,7 +276,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     borderColor: 'darkgrey',
     borderBottomWidth: 1,
-    height: 140,
+    height: 120,
     width: '100%',
     flex: 1
   },
@@ -249,6 +285,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 10,
     width: '75%',
+    position: 'relative',
+    top: 5 
   },
   title: {
     fontWeight: 'bold',

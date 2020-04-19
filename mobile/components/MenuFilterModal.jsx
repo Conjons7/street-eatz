@@ -48,7 +48,7 @@ export default class MenuFilterModal extends Component {
           animationType='slide'
         >
           <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-            <Text style={styles.menuFilterText}> Menu Filter </Text>
+            <Text style={styles.menuFilterText}> Category Filter </Text>
           </View>
           <View style={{position: 'absolute', top: 100, left: 15}}>
             {this.displayFilter()}
@@ -56,7 +56,7 @@ export default class MenuFilterModal extends Component {
           <View style={styles.closeModalButton}>
             <Button
               onPress={() => this.closeModal()}
-              title='Close Filter'/>
+              title='Apply Filters'/>
           </View>
         </Modal>
         <TouchableOpacity
@@ -72,7 +72,7 @@ export default class MenuFilterModal extends Component {
 
 const styles = StyleSheet.create({
   menuFilterText: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: 'bold',
     color:'#980000',
     position: 'absolute',

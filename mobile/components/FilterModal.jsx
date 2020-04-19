@@ -94,7 +94,7 @@ export default class FilterModal extends Component{
                             <Picker.Item label="Vietnamese" value="Vietnamese" />
                         </Picker> 
                     </View>
-                    <Button onPress={() => this.closeModal()} title='Close Filter'/>
+                    <Button onPress={() => this.closeModal()} title='Apply Filters'/>
                 </Modal>
                 <Button 
                     onPress ={()=>this.openModal()}
