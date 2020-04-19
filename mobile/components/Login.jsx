@@ -177,8 +177,8 @@ const styles = StyleSheet.create({
   logo: {
     width: 340,
     height: 325,
-    marginBottom: '5%',
-    marginTop: '5%',
+    marginBottom: 35,
+    marginTop: 35,
     marginLeft: 'auto',
     marginRight: 'auto',
     resizeMode: 'contain',
