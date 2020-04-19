@@ -172,7 +172,7 @@ export default class Menu extends React.Component {
   handleFilterSelect(category) {
     let list = this.state.category;
     for (let i = 0; i < list.length; i++) {
-      //if All is selected(true), every other category is unselected(false)
+      //if All is selected(true), when another category is selected(true), All is unselected(false)
       if (list[i].itemCategory === category && list[0].selectedCategory === true) {
         list[i].selectedCategory = !list[i].selectedCategory
         list[0].selectedCategory = false
@@ -184,6 +184,7 @@ export default class Menu extends React.Component {
         list[0].selectedCategory = true
       }
     }
+    //if All is selected(true), all other categories are unselected(false)
     if (list[0].selectedCategory === true) {
       for (let i = 1; i < list.length; i++) {
         list[i].selectedCategory = false
