@@ -22,9 +22,11 @@ export default class FilterModal extends Component{
     render(){  
         return (
             <View style={styles.container}>
-                <Modal style={styles.modal}
+                <Modal 
+                    style={styles.modal}
                     visible={this.state.modalVisible}
                     onRequestClose={() => this.closeModal()}
+                    animationType={'slide'}
                 >
                     <View style={{ 
                         flex: 1, 

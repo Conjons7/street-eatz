@@ -89,7 +89,7 @@ export default class DisplayReview extends Component{
         }
         {
           businessReviews.length > 0 ?
-          <View style={styles.reviewHeader}>
+          <View style={styles.averageReviewStyling}>
             {
               this.state.averageBusinessReviews ? 
                 <Rating
@@ -97,9 +97,9 @@ export default class DisplayReview extends Component{
                   readonly
                   startingValue={this.state.averageBusinessReviews}
                   fractions={1}
-                  tintColor='#ffe599'
+                  tintColor='#980000'
                 /> :
-                <Text> No ratings available for this food truck.</Text>
+                <Text style={{textAlign: 'center', color: 'white'}}> No ratings available for this food truck.</Text>
             }
           </View>
           :
@@ -154,5 +154,8 @@ const styles = StyleSheet.create({
       fontSize: 25,
       fontWeight: 'bold',
       color: 'white'
+    },
+    averageReviewStyling: {
+      backgroundColor: '#980000'
     }
 })

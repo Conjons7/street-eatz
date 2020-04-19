@@ -4,7 +4,9 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Linking } 
 import axios from 'axios';
 import { Header, Icon, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
-import ShareFeature from './ShareFeature'
+import ShareFeature from './ShareFeature';
+import MenuFilterModal from './MenuFilterModal';
+import MenuDisplay from './MenuDisplay';
 
 export default class Menu extends React.Component {
   constructor(props) {
@@ -14,7 +16,11 @@ export default class Menu extends React.Component {
       businessName: '',
       businessNumber: '',
       businessImage: 'There is no image',
-      businessUrl: ''
+      businessUrl: '',
+      menuCategoryFilter: '',
+      category: [
+        {itemCategory: 'All', selectedCategory: true}
+      ]
     }
   }
 
@@ -48,10 +54,26 @@ export default class Menu extends React.Component {
           businessUrl: res.data.url
         })
       }
-      );
+      )
+      .then(response => {
+        self.setState(prevState => ({
+          category: [
+            ...prevState.category,
+            { itemCategory: self.state.items[0].category, selectedCategory: false }
+          ]
+        }))
+        self.state.items.map((item, i) => {
+          if (self.state.items[i-1] != undefined && item.category != self.state.items[i-1].category) {
+            self.setState(prevState => ({
+              category: [
+                ...prevState.category,
+                { itemCategory: item.category, selectedCategory: false }
+              ]
+            }))
+          }
+        })
+      })
   }
-
-  goToDescriptionMenu = (image, desc, price, item, token, businessId, category) => Actions.descriptionMenu({ image: image, desc: desc, price: price, item: item, token: token, businessId: businessId, category: category });
 
   displayMenu() {
     let count = 0;
@@ -60,7 +82,20 @@ export default class Menu extends React.Component {
     return menu.map((item, i) => {
       count++
       return (
+        // <MenuDisplay
+        //   category = {item.category}
+        //   menu = {menu}
+        //   image = {item.image}
+        //   description = {item.desc}
+        //   price = {item.price}
+        //   item = {item.item}
+        //   token = {this.props.token}
+        //   businessId = {this.props.businessId}
+        //   index = {i}
+        //   key = {count}
+        // />
         <View style={{ flex: 1 }}>
+          {/* conditional to check if categories aren't undefined or equal to the previous category */}
           {menu[i - 1] !== undefined && item.category !== menu[i - 1].category ?
             <View style={{ flex: 1, alignItems: 'center' }}>
               <Text style={styles.menuLabel}>{item.category}</Text>
@@ -97,8 +132,33 @@ export default class Menu extends React.Component {
       .then(res => this.goToLogin())
   }
 
+  updateMenuCategory = (filter) => this.setState({menuCategoryFilter: filter});
+  handleFilterSelect(category) {
+    let list = this.state.category;
+    for (let i = 0; i < list.length; i++) {
+      //if All is selected(true), every other category is unselected(false)
+      if (list[i].itemCategory === category && list[0].selectedCategory === true) {
+        list[i].selectedCategory = !list[i].selectedCategory
+        list[0].selectedCategory = false
+      } //if All is unselected(false), every other category can be selected(true) 
+        else if (list[i].itemCategory === category && list[0].selectedCategory === false) {
+        list[i].selectedCategory = !list[i].selectedCategory
+      } //if All is unselected(false), it can be selected(true) again
+        else if (list[i].itemCategory === category && list[0].selectedCategory === false) {
+        list[0].selectedCategory = true
+      }
+    }
+    if (list[0].selectedCategory === true) {
+      for (let i = 1; i < list.length; i++) {
+        list[i].selectedCategory = false
+      }
+    }
+    this.setState({category: list})
+  }
+
   goToLogin = () => Actions.login();
   goToSettings = (token) => Actions.customerSettings({ token: token });
+  goToDescriptionMenu = (image, desc, price, item, token, businessId, category) => Actions.descriptionMenu({ image: image, desc: desc, price: price, item: item, token: token, businessId: businessId, category: category });
   toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView });
   goToMap = (token) => Actions.map({ token: token });
   goToDisplayReview = (token) => {
@@ -140,16 +200,28 @@ export default class Menu extends React.Component {
           <Text style={styles.textPhone}>{this.state.businessNumber}</Text> 
           <Text style={styles.textWebpage} onPress={() => Linking.openURL('http://' + this.state.businessUrl)}>{this.state.businessUrl}</Text>
           <ShareFeature businessName={this.state.businessName} />
-          <Button title="Reviews" onPress={() => this.goToDisplayReview(this.props.token)} buttonStyle={{backgroundColor: '#980000'}} />
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <TouchableOpacity onPress={() => this.goToDisplayReview(this.props.token)} style={{backgroundColor: '#980000', height: 25, width: 120}}>
+              <Text style={{textAlign: 'center', fontSize: 20, color: 'white'}}>Reviews</Text>
+            </TouchableOpacity>
+          </View>
+          
         </View>
-        <ScrollView scrollEnabled={true}>
-          {this.state.items.length > 0 ?
+        <MenuFilterModal
+          menuCategoryFilter = {this.state.menuCategoryFilter}
+          updateMenuCategory = {this.updateMenuCategory}
+          menu = {this.state.category}
+          handleFilterSelect = {(category) => this.handleFilterSelect(category)}
+        />
+        
+        {this.state.category[0].selectedCategory === true && this.state.items.length > 0 ?
+          <ScrollView scrollEnabled={true}>
             <Text style={styles.firstMenuLabel}>{this.state.items[0].category}</Text>
-            :
-            <View></View>
-          }
-          <View style={{ paddingTop: 40, flex: 1 }} >{this.displayMenu()}</View>
-        </ScrollView>
+            <View style={{ paddingTop: 40, flex: 1 }} >{this.displayMenu()}</View>
+          </ScrollView>
+          :
+          <View></View>
+        }
       </View>
     )
   }
@@ -202,7 +274,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'column',
     flex: 0,
-    height: 450,
+    height: 335,
     resizeMode: 'stretch',
     justifyContent: 'center',
     backgroundColor: '#980000',
