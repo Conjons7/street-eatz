@@ -32,7 +32,7 @@ export default class OwnerManageReviews extends React.Component {
     const reviews = this.state.reviews
     const displayReviews = reviews.map((review, i) => {
         const date = review.timeStamp.slice(0, 10)
-        const backgroundColor = review.rating == 1 ? 'rgb(225, 93, 68)'
+        const bgColor = review.rating == 1 ? 'rgb(225, 93, 68)'
                                 : review.rating > 3 ? 'rgb(68, 184, 172)'
                                 : 'rgb(239, 192, 80)'
         const reviewChecked = review['response text'] ? true : false
@@ -42,9 +42,10 @@ export default class OwnerManageReviews extends React.Component {
                 onPress={() => Actions.ownerReviewItem({ review: review, token: this.props.token, userId: this.props.userId, businessIds: this.props.businessIds })}
                 title={review.text}
                 titleStyle={{ fontSize: 18 }}
+                containerStyle={review.isHidden ? {backgroundColor:'#FF0000'} : {backgroundColor:'white'}}
                 subtitle={`${review.username} on ${date}`}
                 subtitleStyle={{ color: 'gray', fontStyle: 'italic', fontWeight: 'bold', marginTop: 6 }}
-                badge={{ value: review.rating, textStyle: { color: 'white', fontSize: 18 }, badgeStyle: { backgroundColor: backgroundColor, width: 30, height: 30, borderRadius: 15 }, containerStyle: { marginTop: 0 } }}
+                badge={{ value: review.rating, textStyle: { color: 'white', fontSize: 18 }, badgeStyle: { backgroundColor: bgColor, width: 30, height: 30, borderRadius: 15 }, containerStyle: { marginTop: 0 } }}
                 checkBox={{ checked: reviewChecked }}
                 bottomDivider
                 chevron
