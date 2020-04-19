@@ -111,8 +111,9 @@ class Login extends Component {
             onPress={() => this.loginOwner(this.state.email, this.state.password)}>
             <Text style={styles.loginButtonText}> Login As Owner </Text>
           </TouchableOpacity>
-          <Text style={styles.registerButton} onPress={this.goToRegister}>Click Here To Register!</Text>
-          <Text style={styles.registerButton} onPress = {this.goToOwnerRegister}>Click Here To Register As Owner</Text>
+          <Text style={styles.registerButton} onPress={this.goToRegister}>Register</Text>
+          <Text style={styles.registerButton} onPress = {this.goToOwnerRegister}>Register As Owner</Text>
+          <Text style={styles.registerButton}>Forgot Password</Text>
         </ScrollView>
       </KeyboardAvoidingView>
     )
@@ -170,15 +171,20 @@ const styles = StyleSheet.create({
     fontSize:17,
   },
   registerButton: {
-    color: 'blue',
+    margin: '1.5%',
+    color: 'white',
     textAlign: 'center',
-    fontSize:18,
+    fontSize:20,
+    fontWeight: '800',
+    textShadowColor: 'black',
+    textShadowOffset: {width: 0, height: 0},
+    textShadowRadius: 3,
   },
   logo: {
     width: 340,
     height: 325,
-    marginBottom: 35,
-    marginTop: 35,
+    marginBottom: '5%',
+    marginTop: '5%',
     marginLeft: 'auto',
     marginRight: 'auto',
     resizeMode: 'contain',
