@@ -4,7 +4,8 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Linking } 
 import axios from 'axios';
 import { Header, Icon, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
-import ShareFeature from './ShareFeature'
+import ShareFeature from './ShareFeature';
+import MenuFilterModal from './MenuFilterModal';
 
 export default class Menu extends React.Component {
   constructor(props) {
@@ -14,7 +15,11 @@ export default class Menu extends React.Component {
       businessName: '',
       businessNumber: '',
       businessImage: 'There is no image',
-      businessUrl: ''
+      businessUrl: '',
+      menuCategoryFilter: '',
+      category: [
+        {itemCategory: 'All', selectedCategory: true}
+      ]
     }
   }
 
@@ -48,48 +53,144 @@ export default class Menu extends React.Component {
           businessUrl: res.data.url
         })
       }
-      );
+      )
+      .then(response => {
+        self.setState(prevState => ({
+          category: [
+            ...prevState.category,
+            { itemCategory: self.state.items[0].category, selectedCategory: false }
+          ]
+        }))
+        self.state.items.map((item, i) => {
+          if (self.state.items[i-1] != undefined && item.category != self.state.items[i-1].category) {
+            self.setState(prevState => ({
+              category: [
+                ...prevState.category,
+                { itemCategory: item.category, selectedCategory: false }
+              ]
+            }))
+          }
+        })
+      })
   }
-
-  goToDescriptionMenu = (image, desc, price, item, token, businessId, category) => Actions.descriptionMenu({ image: image, desc: desc, price: price, item: item, token: token, businessId: businessId, category: category });
 
   displayMenu() {
     let count = 0;
     const menu = this.state.items;
-
-    return menu.map((item, i) => {
-      count++
+    let filteredItems = []
+    for (let i = 1; i < this.state.category.length; i++) {
+      if (this.state.category[i].selectedCategory === true) {
+        filteredItems.push(this.state.category[i].itemCategory)
+      }
+    }
+    //displaying menu for filtered items
+    if (filteredItems.length > 0) {
       return (
-        <View style={{ flex: 1 }}>
-          {menu[i - 1] !== undefined && item.category !== menu[i - 1].category ?
-            <View style={{ flex: 1, alignItems: 'center' }}>
-              <Text style={styles.menuLabel}>{item.category}</Text>
-            </View>
-            :
-            <View></View>
-          }
-          <TouchableOpacity
-            onPress={() => this.goToDescriptionMenu(item.image, item.desc, item.price, item.item, this.props.token, this.props.businessId, item.category)}
-            style={styles.containerFoodItem}
-            key={count}>
-            {item.image ?
-              <View>
-                <Image style={styles.photo}
-                  source={{ uri: item.image }}
-                />
+        //taking filtered items and creating separate categories
+        filteredItems.map(item => {
+          return (
+            <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, alignItems: 'center' }}>
+                <Text style={styles.menuLabel}>{item}</Text>
               </View>
-              :
-              <View></View>
-            }
-            <View style={styles.containerItemInfo}>
-              <Text style={styles.title}>{item.item}</Text>
-              <Text style={styles.desc}>{item.desc && item.desc.length > 55 ? item.desc.slice(0, 55) + '...' : item.desc}</Text>
-              <Text style={styles.price}>${item.price}</Text>
+              {
+                //if categories are equal, the items will display under that category
+                menu.map((items) => {
+                  count++
+                  if (items.category === item) {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => this.goToDescriptionMenu(items.image, items.desc, items.price, items.item, this.props.token, this.props.businessId, items.category)}
+                        style={styles.containerFoodItem}
+                        key={count}>
+                      {
+                        items.image ?
+                          <View>
+                            <Image style={styles.photo} source={{ uri: items.image }}/>
+                          </View>
+                          :
+                          <View></View>
+                      }
+                        <View style={styles.containerItemInfo}>
+                          <Text style={styles.title}>{items.item}</Text>
+                          <Text style={styles.desc}>{items.desc && items.desc.length > 55 ? items.desc.slice(0, 55) + '...' : items.desc}</Text>
+                          <Text style={styles.price}>${items.price}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    )
+                  }
+                })
+              }
             </View>
-          </TouchableOpacity>
-        </View>
+          )
+        })
       )
-    })
+    } else {
+      //displaying menu for all items
+      return (
+        this.state.category.map(item => {
+          return (
+            <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, alignItems: 'center' }}>
+                <Text style={styles.menuLabel}>{item.itemCategory === 'All' ? null : item.itemCategory}</Text>
+              </View>
+              {
+                //if categories are equal, the items will display under that category
+                menu.map((items) => {
+                  count++
+                  if (items.category === item.itemCategory) {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => this.goToDescriptionMenu(items.image, items.desc, items.price, items.item, this.props.token, this.props.businessId, items.category)}
+                        style={styles.containerFoodItem}
+                        key={count}>
+                      {
+                        items.image ?
+                          <View>
+                            <Image style={styles.photo} source={{ uri: items.image }}/>
+                          </View>
+                          :
+                          <View></View>
+                      }
+                        <View style={styles.containerItemInfo}>
+                          <Text style={styles.title}>{items.item}</Text>
+                          <Text style={styles.desc}>{items.desc && items.desc.length > 55 ? items.desc.slice(0, 55) + '...' : items.desc}</Text>
+                          <Text style={styles.price}>${items.price}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    )
+                  }
+                })
+              }
+            </View>
+          )
+        })
+      )
+    }
+  }
+
+  handleFilterSelect(category) {
+    let list = this.state.category;
+    for (let i = 0; i < list.length; i++) {
+      //if All is selected(true), when another category is selected(true), All is unselected(false)
+      if (list[i].itemCategory === category && list[0].selectedCategory === true) {
+        list[i].selectedCategory = !list[i].selectedCategory
+        list[0].selectedCategory = false
+      } //if All is unselected(false), every other category can be selected(true) 
+        else if (list[i].itemCategory === category && list[0].selectedCategory === false) {
+        list[i].selectedCategory = !list[i].selectedCategory
+      } //if All is unselected(false), it can be selected(true) again
+        else if (list[i].itemCategory === category && list[0].selectedCategory === false) {
+        list[0].selectedCategory = true
+      }
+    }
+    //if All is selected(true), all other categories are unselected(false)
+    if (list[0].selectedCategory === true) {
+      for (let i = 1; i < list.length; i++) {
+        list[i].selectedCategory = false
+      }
+    }
+    this.setState({category: list})
   }
 
   logOut() {
@@ -97,8 +198,11 @@ export default class Menu extends React.Component {
       .then(res => this.goToLogin())
   }
 
+  updateMenuCategory = (filter) => this.setState({menuCategoryFilter: filter});
+
   goToLogin = () => Actions.login();
   goToSettings = (token) => Actions.customerSettings({ token: token });
+  goToDescriptionMenu = (image, desc, price, item, token, businessId, category) => Actions.descriptionMenu({ image: image, desc: desc, price: price, item: item, token: token, businessId: businessId, category: category });
   toggleSideMenu = sideMenuView => this.setState({ sideMenuView: !sideMenuView });
   goToMap = (token) => Actions.map({ token: token });
   goToDisplayReview = (token) => {
@@ -140,15 +244,20 @@ export default class Menu extends React.Component {
           <Text style={styles.textPhone}>{this.state.businessNumber}</Text> 
           <Text style={styles.textWebpage} onPress={() => Linking.openURL('http://' + this.state.businessUrl)}>{this.state.businessUrl}</Text>
           <ShareFeature businessName={this.state.businessName} />
-          <Button title="Reviews" onPress={() => this.goToDisplayReview(this.props.token)} buttonStyle={{backgroundColor: '#980000'}} />
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <TouchableOpacity onPress={() => this.goToDisplayReview(this.props.token)} style={{backgroundColor: '#980000', height: 25, width: 120}}>
+              <Text style={{textAlign: 'center', fontSize: 20, color: 'white'}}>Reviews</Text>
+            </TouchableOpacity>
+          </View>
         </View>
+        <MenuFilterModal
+          menuCategoryFilter = {this.state.menuCategoryFilter}
+          updateMenuCategory = {this.updateMenuCategory}
+          menu = {this.state.category}
+          handleFilterSelect = {(category) => this.handleFilterSelect(category)}
+        />
         <ScrollView scrollEnabled={true}>
-          {this.state.items.length > 0 ?
-            <Text style={styles.firstMenuLabel}>{this.state.items[0].category}</Text>
-            :
-            <View></View>
-          }
-          <View style={{ paddingTop: 40, flex: 1 }} >{this.displayMenu()}</View>
+          {this.displayMenu()}
         </ScrollView>
       </View>
     )
@@ -177,6 +286,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 10,
     width: '75%',
+    position: 'relative',
+    top: -5 
   },
   title: {
     fontWeight: 'bold',
@@ -202,7 +313,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'column',
     flex: 0,
-    height: 450,
+    height: 335,
     resizeMode: 'stretch',
     justifyContent: 'center',
     backgroundColor: '#980000',
