@@ -57,7 +57,7 @@ class Register extends Component {
     goToDisplayReview = (token, userId, username) => {
         axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
           .then(response => {
-            Actions.displayReview({token: token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, username: username, userId: userId})
+            Actions.displayReview({token: token, reviews: response.data, businessName: this.props.businessName, businessId: this.props.businessId, username: username, userId: userId})
           });
       }
 

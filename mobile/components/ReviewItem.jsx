@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
-import { Header, Icon, Rating } from 'react-native-elements';
+import { Icon, Rating } from 'react-native-elements';
+import { HOST } from 'react-native-dotenv';
 import LoginRequiredModal from './LoginRequiredModal';
 import moment from 'moment';
+import axios from 'axios';
 
 export default class ReviewItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      flagged: false,
+      flagged: this.props.review.isHidden,
       showLoginRequiredModal: false
     }
   }
@@ -19,15 +21,22 @@ export default class ReviewItem extends Component {
   }
 
   handleFlagClick = () => {
-    if (this.props.token && this.state.flagged) {
+    if (this.props.token && this.props.review.isHidden === true) {
       this.setState({ flagged: !this.state.flagged })
       alert('This review has been unflagged')
-    } else if (this.props.token && !this.state.flagged) {
+    } else if (this.props.token && this.props.review.isHidden === false) {
       this.setState({ flagged: !this.state.flagged })
       alert('This review has been flagged')
     } else {
       this.showLoginRequiredModal()
     }
+    if (this.props.token) {
+      axios.put(`${HOST}/api/Reviews/${this.props.review.id}`, {
+        ...this.props.review,
+        isHidden: !this.state.flagged
+      }) 
+    }
+      
   }
 
   hideLoginRequiredModal = () => this.setState({ showLoginRequiredModal: false})
@@ -36,24 +45,22 @@ export default class ReviewItem extends Component {
   render() {
     return (
       <View key={this.props.review.id} style={styles.reviewContainer}>
-          <Header
-            containerStyle={styles.reviewHeader}
-            leftComponent={
-              <View>
+          <View style={styles.reviewItemContainer}>
+            <View style={styles.profileContainer}>
+              <View style={styles.profilePictureContainer}>
                 <Image style={styles.profilePicture} source={require('../assets/blank-prof-pic.png')}/>
-                <Text
-                  style={styles.profileUsername}>
-                   {this.props.review.username}
+              </View>
+              <View style={styles.profileUsernameContainer}>
+                <Text style={styles.profileUsername}>
+                  {this.props.review.username}
                 </Text>
                 <Text
                   style={styles.reviewPostDate}>
                   {this.daysAgo(this.props.date, moment().format())}
                 </Text>
               </View>
-            }
-            rightComponent={
-              <View
-                style={styles.ratingPosition}>
+            </View>
+            <View style={styles.ratingPosition}>
                 <Rating
                   imageSize={25}
                   readonly
@@ -61,9 +68,8 @@ export default class ReviewItem extends Component {
                   fractions={1}
                   tintColor='#ffe599'
                 />
-              </View>
-            }
-          />
+            </View>
+          </View>
           <View>
             <LoginRequiredModal
               isVisible = {this.state.showLoginRequiredModal}
@@ -72,51 +78,63 @@ export default class ReviewItem extends Component {
               businessName = { this.props.businessName }
               reviews = { this.props.review }
             />
-            <Text style={styles.reviewText}> {this.props.review.text} </Text>
+            <Text style={styles.reviewText}>{this.props.review.text}</Text>
             <Icon
               name='flag'
               containerStyle={styles.flagIconPosition}
               size={25}
-              color={this.state.flagged ? 'gray' : 'tan'}
+              color={this.props.token && this.state.flagged ? 'red' : 'tan'}
               underlayColor='#ffe599'
               onPress={() => {this.handleFlagClick()}}
             />
+            {this.props.review['response text'] ? 
+              <React.Fragment>
+                <Text style={styles.ownerName}>{this.props.businessName} commented:</Text>
+                <Text style={styles.reviewResponse}>{this.props.review['response text']}</Text>
+              </React.Fragment>
+            : null}
           </View>
-        </View>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  reviewHeader: {
+  reviewItemContainer: {
+    flexDirection: 'row',
+    height: 50
+  },
+  profileContainer: {
+    flexDirection: 'row',
     backgroundColor: '#ffe599',
-    paddingBottom: 20,
-    marginBottom: 10,
-    paddingTop: 10,
-    borderBottomColor: '#ffe599'
+    width: '60%',
+    padding: 5
   },
   profileUsername: {
     fontSize: 14,
     fontWeight: 'bold',
-    position: 'relative',
-    right: -38,
-    top: -30,
-    marginRight: -40
+    height: '50%'
+  },
+  profileUsernameContainer: {
+    width: '80%',
+    marginLeft: 5
   },
   profilePicture: {
     width: 34,
     height: 34,
-    justifyContent: 'center',
-    borderRadius: 30,
-    position: 'relative',
-    top: 3
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: 'auto',
+    marginBottom: 'auto',
+    borderRadius: 30
+  },
+  profilePictureContainer: {
+    backgroundColor: '#ffe599',
+    width: '20%'
   },
   reviewPostDate: {
     fontSize: 10.5,
-    marginRight: -40,
-    position: 'relative',
-    right: -38,
-    top: -30
+    height: '50%'
   },
   flagIconPosition: {
     position: 'absolute',
@@ -124,9 +142,9 @@ const styles = StyleSheet.create({
     bottom: 8
   },
   ratingPosition: {
-    position: 'absolute',
-    right: 15,
-    top: -28
+    width: '40%',
+    marginTop: 'auto',
+    marginBottom: 'auto'
   },
   reviewContainer: {
     flex: 1,
@@ -135,10 +153,20 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   reviewText: {
-    position: 'relative',
-    top: -30,
-    margin: 15,
-    marginTop: -25,
-    marginBottom: -5
+    width: '82%',
+    marginLeft: '3%',
+    marginBottom: '3%'
+  },
+  ownerName: {
+    width: '82%',
+    marginLeft: '5%',
+    color: '#980000',
+    fontStyle: 'italic',
+    fontWeight: 'bold'
+  },
+  reviewResponse: {
+    width: '82%',
+    marginLeft: '5%',
+    marginBottom: '3%'
   }
 })
