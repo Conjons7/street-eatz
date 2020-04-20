@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
-import { Header, Icon, Rating } from 'react-native-elements';
+import { Icon, Rating } from 'react-native-elements';
 import { HOST } from 'react-native-dotenv';
 import LoginRequiredModal from './LoginRequiredModal';
 import moment from 'moment';
