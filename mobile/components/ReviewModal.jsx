@@ -48,8 +48,7 @@ export default class ReviewModal extends Component {
       username: this.props.username,
       rating: rating,
       isHidden: false,
-      businessId: this.props.businessId,
-      publisherId: this.props.userId
+      businessId: this.props.businessId
     })
     .then((response) => {
       this.setState({ submit: true })

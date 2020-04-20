@@ -16,7 +16,6 @@ export default class Menu extends React.Component {
       businessNumber: '',
       businessImage: 'There is no image',
       businessUrl: '',
-      menuCategoryFilter: '',
       category: [
         {itemCategory: 'All', selectedCategory: true}
       ]
@@ -198,8 +197,6 @@ export default class Menu extends React.Component {
       .then(res => this.goToLogin())
   }
 
-  updateMenuCategory = (filter) => this.setState({menuCategoryFilter: filter});
-
   goToLogin = () => Actions.login();
   goToSettings = (token) => Actions.customerSettings({ token: token });
   goToDescriptionMenu = (image, desc, price, item, token, businessId, category) => Actions.descriptionMenu({ image: image, desc: desc, price: price, item: item, token: token, businessId: businessId, category: category });
@@ -252,7 +249,6 @@ export default class Menu extends React.Component {
         </View>
         <MenuFilterModal
           menuCategoryFilter = {this.state.menuCategoryFilter}
-          updateMenuCategory = {this.updateMenuCategory}
           menu = {this.state.category}
           handleFilterSelect = {(category) => this.handleFilterSelect(category)}
         />
