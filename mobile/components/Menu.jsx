@@ -73,6 +73,30 @@ export default class Menu extends React.Component {
       })
   }
 
+  handleFilterSelect(category) {
+    let list = this.state.category;
+    for (let i = 0; i < list.length; i++) {
+      //if All is selected(true), when another category is selected(true), All is unselected(false)
+      if (list[i].itemCategory === category && list[0].selectedCategory === true) {
+        list[i].selectedCategory = !list[i].selectedCategory
+        list[0].selectedCategory = false
+      } //if All is unselected(false), every other category can be selected(true) 
+        else if (list[i].itemCategory === category && list[0].selectedCategory === false) {
+        list[i].selectedCategory = !list[i].selectedCategory
+      } //if All is unselected(false), it can be selected(true) again
+        else if (list[i].itemCategory === category && list[0].selectedCategory === false) {
+        list[0].selectedCategory = true
+      }
+    }
+    //if All is selected(true), all other categories are unselected(false)
+    if (list[0].selectedCategory === true) {
+      for (let i = 1; i < list.length; i++) {
+        list[i].selectedCategory = false
+      }
+    }
+    this.setState({category: list})
+  }
+
   displayMenu() {
     let count = 0;
     const menu = this.state.items;
@@ -166,30 +190,6 @@ export default class Menu extends React.Component {
         })
       )
     }
-  }
-
-  handleFilterSelect(category) {
-    let list = this.state.category;
-    for (let i = 0; i < list.length; i++) {
-      //if All is selected(true), when another category is selected(true), All is unselected(false)
-      if (list[i].itemCategory === category && list[0].selectedCategory === true) {
-        list[i].selectedCategory = !list[i].selectedCategory
-        list[0].selectedCategory = false
-      } //if All is unselected(false), every other category can be selected(true) 
-        else if (list[i].itemCategory === category && list[0].selectedCategory === false) {
-        list[i].selectedCategory = !list[i].selectedCategory
-      } //if All is unselected(false), it can be selected(true) again
-        else if (list[i].itemCategory === category && list[0].selectedCategory === false) {
-        list[0].selectedCategory = true
-      }
-    }
-    //if All is selected(true), all other categories are unselected(false)
-    if (list[0].selectedCategory === true) {
-      for (let i = 1; i < list.length; i++) {
-        list[i].selectedCategory = false
-      }
-    }
-    this.setState({category: list})
   }
 
   logOut() {
