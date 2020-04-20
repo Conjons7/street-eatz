@@ -40,12 +40,12 @@ export default class ReviewModal extends Component {
     })
   }
 
-  submitReview(text, rating) {
+  submitReview(text, rating, username) {
     let date = new Date()
     axios.post(`${HOST}/api/Reviews`, {
       text: text,
       timeStamp: date,
-      username: this.props.username,
+      username: username,
       rating: rating,
       isHidden: false,
       businessId: this.props.businessId
@@ -60,7 +60,7 @@ export default class ReviewModal extends Component {
   goToDisplayReview = () => {
     axios.get(`${HOST}/api/Reviews/getreview?id=${this.props.businessId}`)
       .then(response => {
-        Actions.displayReview({username: this.props.username, userId: this.props.userId, token: this.props.token, reviews: response.data, businessName: this.state.businessName, businessId: this.props.businessId, submit: this.state.submit})
+        Actions.displayReview({username: this.props.username, userId: this.props.userId, token: this.props.token, reviews: response.data, businessName: this.props.businessName, businessId: this.props.businessId, submit: this.state.submit})
       });
   }
 
@@ -97,7 +97,7 @@ export default class ReviewModal extends Component {
                     title='Leave a review'
                     color='blue'
                     onPress={() => {
-                      this.submitReview(this.state.reviewText, this.state.reviewRating)
+                      this.submitReview(this.state.reviewText, this.state.reviewRating, this.props.username)
                       this.closeModal(this.props.token)
                     }}
                   />

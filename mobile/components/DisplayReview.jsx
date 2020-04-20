@@ -76,7 +76,7 @@ export default class DisplayReview extends Component{
           centerComponent={{ style: styles.reviewHeaderText, text: 'Reviews' }}
           rightComponent={<Icon
             name='home'
-            onPress={() => this.goToMap(this.props.token)}/>}
+            onPress={() => this.goToMap(this.props.token, this.props.userId)}/>}
         />
         {this.state.sideMenuView ?
           <View style={styles.menu}>
