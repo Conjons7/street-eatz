@@ -76,3 +76,11 @@ If this app is pushed to production, please make sure that a custom icon is used
 -------------------------------------------------------------------------------------
 NOTE ON SHARE FEATURE
 Once app is pushed into production. Please add a link to the app download page in the share button message (./mobile/ShareFeature).
+
+# Deploying
+
+Since we are [only deploying the server folder](https://medium.com/@shalandy/deploy-git-subdirectory-to-heroku-ea05e95fce1f) on Heroku the following command will be used:
+
+```
+git subtree push --prefix server heroku master
+```
