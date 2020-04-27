@@ -1,7 +1,25 @@
-ReadMe
+# Street Eatz
 
-- Clone from Github repository 
-  - git@github.com:SanDiegoCodeSchool/street-eatz.git
+A react native mobile application and loopback web server to help customers locate great food trucks.
+
+# Deploying
+
+Since we are [only deploying the server folder](https://medium.com/@shalandy/deploy-git-subdirectory-to-heroku-ea05e95fce1f) on Heroku the following command will be used:
+
+```
+git subtree push --prefix server heroku master
+```
+
+# Getting Started
+
+1. Clone from Github repository 
+```
+git@github.com:SanDiegoCodeSchool/street-eatz.git
+```
+
+
+## Please fix the rest of this documentation:
+
 - Npm install expo-cli
 - Navigate to Mobile folder and type npm install in the terminal
 - Navigate to Server folder and type  npm install in the terminal
@@ -77,10 +95,4 @@ If this app is pushed to production, please make sure that a custom icon is used
 NOTE ON SHARE FEATURE
 Once app is pushed into production. Please add a link to the app download page in the share button message (./mobile/ShareFeature).
 
-# Deploying
 
-Since we are [only deploying the server folder](https://medium.com/@shalandy/deploy-git-subdirectory-to-heroku-ea05e95fce1f) on Heroku the following command will be used:
-
-```
-git subtree push --prefix server heroku master
-```
